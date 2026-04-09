@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>하이엔드 스시 UI 카드</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+  />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hahmlet: ['Hahmlet', 'serif'],
+            moondance: ['Moon Dance', 'cursive'],
+          },
+          colors: {
+            btn: {
+              snow: '#faf5f5',
+              'snow-hover': '#f0e6e6',
+              ink: '#221919',
+              'ink-hover': '#171010',
+              mist: '#fff5f5',
+            },
+            'banner-tint': '#f3e8ea',
+            warm: {
+              50: '#faf7f7',
+              100: '#f0eaea',
+              200: '#e0d8d8',
+              300: '#c9bebe',
+              400: '#a89e9e',
+              500: '#8a8181',
+              600: '#6f6868',
+              700: '#5a5454',
+              800: '#4a4545',
+              900: '#3e3a3a',
+              950: '#252323',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=Moon+Dance&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Hahmlet', serif;
+      letter-spacing: -0.03em;
+      background:
+        radial-gradient(circle at top, rgba(122, 32, 32, 0.06), transparent 32%),
+        #fffdfc;
+    }
+
+    i[class*='ph'] {
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body class="min-h-screen px-6 py-16 font-hahmlet sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+  <main class="mx-auto max-w-6xl space-y-14 sm:space-y-16">
+    <header class="text-center">
+      <h1 class="flex flex-col items-center justify-center gap-2 text-3xl font-medium leading-tight text-red-950 sm:text-4xl">
+        <span class="font-moondance text-[1.6rem] font-normal leading-none text-red-900/80 sm:text-[1.95rem]">Sushi Atelier Components</span>
+        <span class="inline-flex items-center gap-3">
+          <i class="ph ph-fork-knife text-[1.05em] leading-none text-red-800/85" aria-hidden="true"></i>
+          하이엔드 스시 업장을 위한 UI 카드 5선
+        </span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-red-950/65 sm:text-base">
+        `master.html`의 서체, 색감, 버튼 톤, 배너형 카드 구조를 그대로 가져와
+        오마카세 브랜드 사이트에 바로 넣을 수 있는 카드형 섹션으로 재구성했습니다.
+      </p>
+    </header>
+
+    <section class="grid gap-6 lg:grid-cols-2">
+      <article class="bg-banner-tint p-8 sm:p-10 lg:p-12" aria-labelledby="card-philosophy">
+        <span class="inline-flex items-center gap-2 border-b border-neutral-900 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-900">
+          <i class="ph-fill ph-seal-check text-sm leading-none text-neutral-900" aria-hidden="true"></i>
+          Chef's Signature
+        </span>
+        <h2
+          id="card-philosophy"
+          class="mt-6 flex flex-col gap-2 text-2xl font-medium leading-tight text-red-950 sm:text-3xl"
+        >
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-900/75 sm:text-[1.7rem]">Quiet Discipline</span>
+          <span>셰프의 결을 해설하는 오마카세 철학 카드</span>
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-950/70 sm:text-base">
+          숙성의 길이, 샤리의 온도, 피스가 놓이는 순서처럼 브랜드의 미학을
+          한 장 안에서 읽히게 만드는 소개 카드입니다. 첫 화면 아래에 배치하면
+          업장의 결을 짧고 강하게 전달할 수 있습니다.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3 text-xs text-red-950/65 sm:text-sm">
+          <span class="border border-red-950/15 px-3 py-2">12 Seat Counter</span>
+          <span class="border border-red-950/15 px-3 py-2">Aged Fish Program</span>
+          <span class="border border-red-950/15 px-3 py-2">Seasonal Pairing</span>
+        </div>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center bg-btn-ink px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-btn-ink-hover"
+          >
+            브랜드 스토리
+          </a>
+          <a
+            href="#"
+            class="inline-flex items-center justify-center border border-btn-ink bg-transparent px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-ink/10"
+          >
+            셰프 인터뷰
+          </a>
+        </div>
+      </article>
+
+      <article class="relative overflow-hidden" aria-labelledby="card-counter">
+        <div class="absolute inset-0">
+          <img
+            src="ban1.jpeg"
+            alt=""
+            class="h-full w-full origin-center scale-[1.28] object-cover object-center"
+          />
+          <div
+            class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.92)_0%,rgba(0,0,0,0.58)_46%,transparent_100%)]"
+            aria-hidden="true"
+          ></div>
+        </div>
+        <div class="relative px-8 py-12 sm:px-10 sm:py-14 lg:px-12 lg:py-16">
+          <span class="inline-flex items-center gap-2 border-b border-white pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+            <i class="ph-fill ph-moon-stars text-sm leading-none text-white" aria-hidden="true"></i>
+            Counter Experience
+          </span>
+          <h2
+            id="card-counter"
+            class="mt-6 flex flex-col gap-2 text-2xl font-normal leading-tight text-red-50 sm:text-3xl"
+          >
+            <span class="font-moondance text-[1.35rem] font-normal leading-none sm:text-[1.7rem]">
+              <span class="text-red-100/95">Second</span>
+              <span class="text-rose-300/95"> Seating</span>
+            </span>
+            <span>심야 카운터 예약을 유도하는 시그니처 배너</span>
+          </h2>
+          <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-100/90 sm:text-base">
+            21시 이후 단 한 번만 열리는 세컨드 시팅, 한정 사케 페어링, 조도 낮춘
+            카운터 무드를 하나의 장면처럼 보여주는 카드입니다. 런딩 페이지의 주력
+            CTA로 쓰기 좋습니다.
+          </p>
+          <div class="mt-8 grid max-w-md grid-cols-2 gap-3 text-xs text-white/85 sm:text-sm">
+            <div class="border border-white/20 bg-white/5 px-4 py-3">8 Course Pieces</div>
+            <div class="border border-white/20 bg-white/5 px-4 py-3">Sake Pairing</div>
+            <div class="border border-white/20 bg-white/5 px-4 py-3">Fri - Sun Only</div>
+            <div class="border border-white/20 bg-white/5 px-4 py-3">Limited 6 Guests</div>
+          </div>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="#"
+              class="inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+            >
+              즉시 예약
+            </a>
+            <a
+              href="#"
+              class="inline-flex items-center justify-center border border-btn-mist bg-transparent px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-red-50/10"
+            >
+              코스 구성
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="relative overflow-hidden bg-btn-ink p-8 text-red-50 sm:p-10 lg:col-span-2 lg:p-12" aria-labelledby="card-season">
+        <div class="absolute right-0 top-0 h-40 w-40 translate-x-10 -translate-y-10 rounded-full bg-red-200/10 blur-3xl" aria-hidden="true"></div>
+        <div class="grid gap-8 lg:grid-cols-[1.3fr_0.8fr] lg:items-end">
+          <div>
+            <span class="inline-flex items-center gap-2 border-b border-white/70 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <i class="ph-fill ph-fish text-sm leading-none text-white" aria-hidden="true"></i>
+              Seasonal Ledger
+            </span>
+            <h2
+              id="card-season"
+              class="mt-6 flex flex-col gap-2 text-2xl font-normal leading-tight text-red-50 sm:text-3xl"
+            >
+              <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-100/95 sm:text-[1.7rem]">This Week's Water</span>
+              <span>이번 주 입고 어종과 숙성 사인을 보여주는 큐레이션 카드</span>
+            </h2>
+            <p class="mt-5 max-w-2xl text-sm leading-relaxed text-red-100/85 sm:text-base">
+              단순 메뉴판보다 더 깊게, 어떤 생선이 어떤 상태로 준비되는지를 기록처럼
+              전달하는 컴포넌트입니다. 제철감과 전문성을 동시에 강조할 때 효과적입니다.
+            </p>
+          </div>
+          <div class="grid gap-3 text-sm text-red-50/90">
+            <div class="border border-white/15 bg-white/5 px-5 py-4">
+              <div class="text-xs uppercase tracking-[0.2em] text-red-100/60">Aori Ika</div>
+              <div class="mt-2 text-base">72시간 숙성, 유자 소금</div>
+            </div>
+            <div class="border border-white/15 bg-white/5 px-5 py-4">
+              <div class="text-xs uppercase tracking-[0.2em] text-red-100/60">Kinmedai</div>
+              <div class="mt-2 text-base">껍질 토치, 붉은 식초 샤리</div>
+            </div>
+            <div class="border border-white/15 bg-white/5 px-5 py-4">
+              <div class="text-xs uppercase tracking-[0.2em] text-red-100/60">Bafun Uni</div>
+              <div class="mt-2 text-base">차가운 김과 산미 리듬</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+          >
+            이번 주 어종 보기
+          </a>
+          <a
+            href="#"
+            class="inline-flex items-center justify-center border border-white/30 bg-transparent px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-white/10"
+          >
+            숙성 노트 보기
+          </a>
+        </div>
+      </article>
+
+      <article class="relative overflow-hidden" aria-labelledby="card-gift">
+        <div class="absolute inset-0">
+          <img
+            src="ban1.jpeg"
+            alt=""
+            class="h-full w-full scale-[1.25] object-cover object-[35%_center]"
+          />
+          <div
+            class="absolute inset-0 bg-[linear-gradient(90deg,rgba(32,14,14,0.94)_0%,rgba(32,14,14,0.66)_45%,rgba(32,14,14,0.2)_100%)]"
+            aria-hidden="true"
+          ></div>
+        </div>
+        <div class="relative px-8 py-12 sm:px-10 sm:py-14 lg:px-12 lg:py-16">
+          <span class="inline-flex items-center gap-2 border-b border-white pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+            <i class="ph-fill ph-gift text-sm leading-none text-white" aria-hidden="true"></i>
+            Private Gifting
+          </span>
+          <h2
+            id="card-gift"
+            class="mt-6 flex flex-col gap-2 text-2xl font-normal leading-tight text-red-50 sm:text-3xl"
+          >
+            <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-100/95 sm:text-[1.7rem]">Gifted Reservation</span>
+            <span>기념일 수요를 잡아내는 프라이빗 초대 카드</span>
+          </h2>
+          <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-100/90 sm:text-base">
+            예약권, 메시지 카드, 좌석별 플레이트 요청을 함께 엮어 선물 경험처럼
+            보이게 하는 카드입니다. 기념일, 접대, 기업 선물 페이지의 핵심 CTA로
+            활용하기 좋습니다.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="#"
+              class="inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+            >
+              선물하기
+            </a>
+            <a
+              href="#"
+              class="inline-flex items-center justify-center border border-btn-mist bg-transparent px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-red-50/10"
+            >
+              메시지 옵션
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="bg-banner-tint p-8 sm:p-10 lg:p-12" aria-labelledby="card-membership">
+        <span class="inline-flex items-center gap-2 border-b border-neutral-900 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-900">
+          <i class="ph-fill ph-bell-ringing text-sm leading-none text-neutral-900" aria-hidden="true"></i>
+          Concierge Access
+        </span>
+        <h2
+          id="card-membership"
+          class="mt-6 flex flex-col gap-2 text-2xl font-medium leading-tight text-red-950 sm:text-3xl"
+        >
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-900/75 sm:text-[1.7rem]">Waitlist Intelligence</span>
+          <span>취소석 알림과 우선 제안을 묶어낸 멤버십 카드</span>
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-950/70 sm:text-base">
+          만석 업장에서 중요한 것은 빈 좌석이 아니라 다시 불러낼 고객입니다.
+          이 카드는 취소석 푸시, 셰프 스페셜 선공개, 우선 예약 알림을 한 번에 보여주는
+          CRM 성격의 구성입니다.
+        </p>
+        <div class="mt-8 space-y-3 text-sm text-red-950/70">
+          <div class="flex items-center justify-between border-b border-red-950/10 pb-3">
+            <span>취소석 우선 알림</span>
+            <span>실시간</span>
+          </div>
+          <div class="flex items-center justify-between border-b border-red-950/10 pb-3">
+            <span>셰프 스페셜 선공개</span>
+            <span>월 1회</span>
+          </div>
+          <div class="flex items-center justify-between pb-1">
+            <span>사케 페어링 초대</span>
+            <span>비정기</span>
+          </div>
+        </div>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center bg-btn-ink px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-btn-ink-hover"
+          >
+            알림 등록
+          </a>
+          <a
+            href="#"
+            class="inline-flex items-center justify-center border border-btn-ink bg-transparent px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-ink/10"
+          >
+            멤버 혜택 보기
+          </a>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

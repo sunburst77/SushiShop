@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>배너 카드 — 마스터</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+  />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hahmlet: ['Hahmlet', 'serif'],
+            moondance: ['Moon Dance', 'cursive'],
+          },
+          colors: {
+            /* 화이트/블랙에 살짝 레드가 섞인 버튼 톤 */
+            btn: {
+              snow: '#faf5f5',
+              'snow-hover': '#f0e6e6',
+              ink: '#221919',
+              'ink-hover': '#171010',
+              mist: '#fff5f5',
+            },
+            /* 라이트 그레이 + 레드가 조금 더 도는 톤 */
+            'banner-tint': '#f3e8ea',
+            warm: {
+              50: '#faf7f7',
+              100: '#f0eaea',
+              200: '#e0d8d8',
+              300: '#c9bebe',
+              400: '#a89e9e',
+              500: '#8a8181',
+              600: '#6f6868',
+              700: '#5a5454',
+              800: '#4a4545',
+              900: '#3e3a3a',
+              950: '#252323',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=Moon+Dance&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Hahmlet', serif;
+      letter-spacing: -0.03em;
+    }
+    i[class*='ph'] {
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-white py-16 px-6 font-hahmlet sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+  <div class="mx-auto max-w-3xl space-y-14 sm:space-y-16">
+    <header class="pb-2 text-center sm:pb-4">
+      <h1 class="flex flex-col items-center justify-center gap-1.5 text-2xl font-medium leading-tight text-red-950 sm:gap-2 sm:text-3xl sm:leading-tight">
+        <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-900/80 sm:text-[1.65rem]">Banner Card Master</span>
+        <span class="inline-flex items-center gap-2 whitespace-nowrap">
+          <i class="ph ph-squares-four text-[1.1em] leading-none text-red-800/85" aria-hidden="true"></i>
+          배너 카드 마스터
+        </span>
+      </h1>
+      <p class="mt-5 text-sm text-red-900/65 sm:mt-6">이미지 배경 / 화이트 배경 두 가지 유형</p>
+    </header>
+
+    <!-- 1. 배경 이미지 배너 카드 -->
+    <article
+      class="relative overflow-hidden"
+      aria-labelledby="banner-image-title"
+    >
+      <div class="absolute inset-0">
+        <img
+          src="ban1.jpeg"
+          alt=""
+          class="h-full w-full origin-center scale-[1.32] object-cover translate-x-[-1%]"
+        />
+        <div
+          class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.92)_0%,rgba(0,0,0,0.55)_42%,transparent_100%)]"
+          aria-hidden="true"
+        ></div>
+      </div>
+      <div class="relative px-8 py-12 sm:px-12 sm:py-16">
+        <span
+          class="inline-flex items-center gap-2 border-b border-white pb-2 text-xs font-semibold uppercase text-white"
+        >
+          <i class="ph-fill ph-sparkle text-sm leading-none text-white" aria-hidden="true"></i>
+          신메뉴 출시
+        </span>
+        <h2
+          id="banner-image-title"
+          class="mt-6 flex flex-col gap-1.5 text-2xl font-normal leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight"
+        >
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-100/95 sm:text-[1.65rem]">Premium Omakase Course</span>
+          <span class="whitespace-nowrap">프리미엄 오마카세 코스</span>
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-100/90 sm:mt-6 sm:text-base">
+          셰프가 직접 엄선한 제철 생선으로 구성된 코스를 특별 가격으로 만나보세요.
+          예약 시 음료 한 잔이 무료로 제공됩니다.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4 sm:mt-12">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200/50"
+          >
+            예약하기
+          </a>
+          <a
+            href="#"
+            class="inline-flex items-center justify-center border border-btn-mist bg-transparent px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-red-50/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200/45"
+          >
+            메뉴 보기
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. 라이트 그레이–레드 톤 배너 카드 -->
+    <article
+      class="bg-banner-tint p-8 sm:p-12 lg:p-14"
+      aria-labelledby="banner-white-title"
+    >
+      <span
+        class="inline-flex items-center gap-2 border-b border-neutral-900 pb-2 text-xs font-semibold uppercase text-neutral-900"
+      >
+        <i class="ph-fill ph-tag text-sm leading-none text-neutral-900" aria-hidden="true"></i>
+        한정 프로모션
+      </span>
+      <h2
+        id="banner-white-title"
+        class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-950 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight"
+      >
+        <span class="font-moondance text-[1.35rem] font-normal leading-none sm:text-[1.65rem]">
+          <span class="text-red-900/80">Lunch Special Set,</span>
+          <span class="text-red-800"> 20% Off</span>
+        </span>
+        <span class="whitespace-nowrap">
+          점심 스페셜 세트
+          <span class="text-red-800"> 20%</span><span class="text-red-700"> 할인</span>
+        </span>
+      </h2>
+      <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-950/70 sm:mt-6 sm:text-base">
+        평일 11시~15시 방문 고객 대상으로 스페셜 세트를 할인된 가격에 제공합니다.
+        매장 이용 또는 포장 주문 모두 적용됩니다.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4 sm:mt-12">
+        <a
+          href="#"
+          class="inline-flex items-center justify-center bg-btn-ink px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-btn-ink-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/35"
+        >
+          주문하기
+        </a>
+        <a
+          href="#"
+          class="inline-flex items-center justify-center border border-btn-ink bg-transparent px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-ink/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/35"
+        >
+          자세히 알아보기
+        </a>
+      </div>
+    </article>
+  </div>
+</body>
+</html>
