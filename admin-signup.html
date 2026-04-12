@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스시 카이덴 — 관리자 계정 만들기</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_180x180.png" />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+  />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hahmlet: ['Hahmlet', 'serif'],
+            moondance: ['Moon Dance', 'cursive'],
+          },
+          colors: {
+            btn: {
+              snow: '#faf5f5',
+              'snow-hover': '#f0e6e6',
+              ink: '#221919',
+              'ink-hover': '#171010',
+              mist: '#fff5f5',
+            },
+            'banner-tint': '#f3e8ea',
+            surface: {
+              base: '#171314',
+              lift: '#1f1b1c',
+              panel: '#2a2526',
+              veil: '#363032',
+              void: '#0f0d0e',
+            },
+            warm: {
+              50: '#faf7f7',
+              100: '#f0eaea',
+              200: '#e0d8d8',
+              300: '#c9bebe',
+              400: '#a89e9e',
+              500: '#8a8181',
+              600: '#6f6868',
+              700: '#5a5454',
+              800: '#4a4545',
+              900: '#3e3a3a',
+              950: '#252323',
+            },
+          },
+          maxWidth: {
+            '5xl': '1440px',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=Moon+Dance&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Hahmlet', serif;
+      letter-spacing: -0.03em;
+    }
+    i[class*='ph'] {
+      letter-spacing: 0;
+    }
+    html {
+      color-scheme: dark;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-surface-base font-hahmlet text-red-100/90">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+    <header class="border-b border-warm-600/35 pb-8 sm:pb-10">
+      <p class="text-xs font-medium uppercase tracking-wide text-red-200/55">Admin</p>
+      <h1 class="mt-2 flex flex-col gap-1 text-2xl font-medium leading-tight text-red-50 sm:text-3xl">
+        <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">Create Account</span>
+        <span class="inline-flex items-center gap-2">
+          <i class="ph-fill ph-user-plus text-[1em] leading-none text-red-200/70" aria-hidden="true"></i>
+          관리자 계정 만들기
+        </span>
+      </h1>
+      <p class="mt-4 max-w-2xl text-sm leading-relaxed text-red-100/62">
+        Supabase Auth <strong class="font-medium text-red-100/85">signUp</strong> API로 관리자용 이메일·비밀번호 계정을 등록합니다. 프로젝트에 배포하기 전에 아래 초대 코드를 반드시 바꾸세요.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href="admin.html"
+          class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-normal text-red-200/85 transition hover:text-red-50"
+        >
+          <i class="ph ph-arrow-left mr-2 text-base leading-none" aria-hidden="true"></i>
+          로그인으로
+        </a>
+        <a
+          href="index.html"
+          class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-normal text-red-200/85 transition hover:text-red-50"
+        >
+          사이트로
+        </a>
+      </div>
+    </header>
+
+    <section class="mt-10 bg-surface-panel p-6 sm:p-8 lg:p-10">
+      <h2 class="text-lg font-medium text-red-50 sm:text-xl">회원가입 (Auth API)</h2>
+      <p class="mt-2 text-xs leading-relaxed text-red-100/62 sm:text-sm">
+        Supabase 대시보드 → <span class="text-red-200/80">Authentication → Providers</span>에서 Email을 켜 두어야 합니다. 이메일 확인을 켠 경우, 메일의 링크를 누른 뒤 로그인하세요.
+      </p>
+
+      <form id="form-signup" class="mt-8 grid max-w-md grid-cols-1 gap-6">
+        <div>
+          <label for="signup-invite" class="text-xs font-medium text-red-200/90">초대 코드</label>
+          <input
+            id="signup-invite"
+            name="invite"
+            type="password"
+            autocomplete="off"
+            required
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+            placeholder="admin-signup.html 스크립트의 ADMIN_INVITE_CODE와 동일하게"
+          />
+          <p class="mt-1.5 text-xs text-red-100/50">
+            이 파일의 <code class="text-red-200/70">ADMIN_INVITE_CODE</code> 값과 일치해야 가입할 수 있습니다.
+          </p>
+        </div>
+        <div>
+          <label for="signup-email" class="text-xs font-medium text-red-200/90">이메일</label>
+          <input
+            id="signup-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+            placeholder="admin@example.com"
+          />
+        </div>
+        <div>
+          <label for="signup-password" class="text-xs font-medium text-red-200/90">비밀번호</label>
+          <input
+            id="signup-password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="6"
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+          />
+        </div>
+        <div>
+          <label for="signup-password2" class="text-xs font-medium text-red-200/90">비밀번호 확인</label>
+          <input
+            id="signup-password2"
+            name="password2"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="6"
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+          />
+        </div>
+        <p id="signup-msg" class="hidden text-sm leading-relaxed" role="alert"></p>
+        <button
+          type="submit"
+          id="signup-submit"
+          class="inline-flex w-fit items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+        >
+          계정 등록하기
+        </button>
+      </form>
+    </section>
+
+    <section class="mt-10 bg-surface-panel/80 p-6 sm:p-8">
+      <h3 class="text-sm font-medium text-red-50">대시보드에서 직접 만들기</h3>
+      <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-red-100/65">
+        <li>Supabase 프로젝트 → <span class="text-red-200/80">Authentication → Users</span></li>
+        <li><span class="text-red-200/80">Add user → Create new user</span></li>
+        <li>이메일·비밀번호 입력 후 생성(필요 시 “Auto Confirm User” 체크)</li>
+        <li><a href="admin.html" class="text-red-200/85 underline decoration-red-200/30 underline-offset-2 hover:text-red-50">admin.html</a>에서 동일 계정으로 로그인</li>
+      </ol>
+    </section>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    /** 배포 전 반드시 임의의 긴 문자열로 변경하세요. 이 값이 HTML에 노출되므로 공개 저장소에는 올리지 마세요. */
+    var ADMIN_INVITE_CODE = 'sunburst77';
+
+    var SUPABASE_URL = 'https://mnzdnsfatcqtmqktihgl.supabase.co';
+    var SUPABASE_ANON_KEY =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uemRuc2ZhdGNxdG1xa3RpaGdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MDM5NDgsImV4cCI6MjA5MTM3OTk0OH0.e1FcCKwdNMHWQKULRczmuEXnZoYISRWziA2yLcYdnP4';
+
+    var supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    var form = document.getElementById('form-signup');
+    var msgEl = document.getElementById('signup-msg');
+    var submitBtn = document.getElementById('signup-submit');
+
+    function showMsg(text, ok) {
+      msgEl.textContent = text;
+      msgEl.classList.remove('hidden', 'text-red-200/85', 'text-red-300/90');
+      if (ok) {
+        msgEl.classList.add('text-red-200/85');
+      } else {
+        msgEl.classList.add('text-red-300/90');
+      }
+    }
+
+    function hideMsg() {
+      msgEl.textContent = '';
+      msgEl.classList.add('hidden');
+      msgEl.classList.remove('text-red-200/85', 'text-red-300/90');
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideMsg();
+
+      var invite = document.getElementById('signup-invite').value.trim();
+      var email = document.getElementById('signup-email').value.trim();
+      var password = document.getElementById('signup-password').value;
+      var password2 = document.getElementById('signup-password2').value;
+
+      if (ADMIN_INVITE_CODE === 'kaiden-admin-setup-CHANGE_ME') {
+        showMsg(
+          '보안을 위해 admin-signup.html 안의 ADMIN_INVITE_CODE를 본인만 아는 값으로 먼저 바꾼 뒤 다시 시도하세요.',
+          false
+        );
+        return;
+      }
+
+      if (invite !== ADMIN_INVITE_CODE) {
+        showMsg('초대 코드가 올바르지 않습니다.', false);
+        return;
+      }
+
+      if (password !== password2) {
+        showMsg('비밀번호 확인이 일치하지 않습니다.', false);
+        return;
+      }
+
+      if (password.length < 6) {
+        showMsg('비밀번호는 6자 이상이어야 합니다.', false);
+        return;
+      }
+
+      var redirectTo = new URL('admin.html', window.location.href).href;
+
+      submitBtn.disabled = true;
+      var prev = submitBtn.textContent;
+      submitBtn.textContent = '등록 중…';
+
+      var result = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          emailRedirectTo: redirectTo,
+        },
+      });
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = prev;
+
+      if (result.error) {
+        showMsg(result.error.message || '가입에 실패했습니다. Supabase Auth 설정을 확인해 주세요.', false);
+        return;
+      }
+
+      if (result.data.session) {
+        showMsg('가입이 완료되었습니다. 예약 관리 페이지로 이동합니다.', true);
+        setTimeout(function () {
+          window.location.href = 'admin.html';
+        }, 900);
+        return;
+      }
+
+      showMsg(
+        '가입 요청이 접수되었습니다. 프로젝트에서 이메일 확인을 켠 경우, 받은 편지함의 링크를 누른 뒤 admin.html에서 로그인하세요.',
+        true
+      );
+    });
+  </script>
+</body>
+</html>

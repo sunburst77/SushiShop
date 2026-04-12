@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스시 카이덴 — 예약 관리</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_180x180.png" />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+  />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hahmlet: ['Hahmlet', 'serif'],
+            moondance: ['Moon Dance', 'cursive'],
+          },
+          colors: {
+            btn: {
+              snow: '#faf5f5',
+              'snow-hover': '#f0e6e6',
+              ink: '#221919',
+              'ink-hover': '#171010',
+              mist: '#fff5f5',
+            },
+            'banner-tint': '#f3e8ea',
+            surface: {
+              base: '#171314',
+              lift: '#1f1b1c',
+              panel: '#2a2526',
+              veil: '#363032',
+              void: '#0f0d0e',
+            },
+            warm: {
+              50: '#faf7f7',
+              100: '#f0eaea',
+              200: '#e0d8d8',
+              300: '#c9bebe',
+              400: '#a89e9e',
+              500: '#8a8181',
+              600: '#6f6868',
+              700: '#5a5454',
+              800: '#4a4545',
+              900: '#3e3a3a',
+              950: '#252323',
+            },
+          },
+          maxWidth: {
+            '5xl': '1440px',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=Moon+Dance&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Hahmlet', serif;
+      letter-spacing: -0.03em;
+    }
+    i[class*='ph'] {
+      letter-spacing: 0;
+    }
+    html {
+      color-scheme: dark;
+    }
+    /* 모바일·태블릿에서 햄버거 메뉴 열린 동안 배경 스크롤 방지 */
+    body.admin-drawer-open {
+      overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+      body.admin-drawer-open {
+        overflow: auto;
+      }
+    }
+    body.admin-course-menu-modal-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-surface-base font-hahmlet text-red-100/90">
+  <!-- 로그인 전 -->
+  <div id="layout-login" class="flex min-h-screen flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
+    <div class="w-full max-w-md min-w-0">
+      <p class="text-center text-xs font-medium uppercase tracking-wide text-red-200/50">Admin</p>
+      <h1 class="mt-2 text-center text-2xl font-medium leading-tight text-red-50 sm:text-3xl">
+        <span class="font-moondance block text-[1.4rem] font-normal text-red-200/85 sm:text-[1.65rem]">Reservation Desk</span>
+        <span class="mt-2 block text-lg text-red-100/88 sm:text-xl">스시 카이덴 · 예약 관리</span>
+      </h1>
+
+    <!-- 로그인 -->
+    <section id="panel-login" class="mt-10 bg-surface-panel p-6 sm:p-8 lg:p-10">
+      <h2 class="text-lg font-medium text-red-50 sm:text-xl">관리자 로그인</h2>
+      <p class="mt-2 text-xs leading-relaxed text-red-100/62 sm:text-sm">
+        예약 데이터에는 개인정보가 포함되므로, 공개 anon 키만으로는 조회할 수 없습니다.
+        <span class="text-red-200/80">supabase-setup.sql</span>의 SELECT 정책을 적용한 뒤, 아래 중 하나로 관리자 계정을 만드세요.
+      </p>
+      <ul class="mt-3 list-disc space-y-1.5 pl-5 text-xs leading-relaxed text-red-100/58 sm:text-sm">
+        <li>
+          <span class="text-red-200/80">대시보드</span>: Authentication → Users → Add user → Create new user
+        </li>
+        <li>
+          <span class="text-red-200/80">회원가입 API</span>:
+          <a
+            href="admin-signup.html"
+            class="text-red-200/85 underline decoration-red-200/30 underline-offset-2 hover:text-red-50"
+            >admin-signup.html</a
+          >
+          에서 이메일·비밀번호 등록 (초대 코드 필요)
+        </li>
+      </ul>
+      <form id="form-login" class="mt-8 grid max-w-md grid-cols-1 gap-6">
+        <div>
+          <label for="login-email" class="text-xs font-medium text-red-200/90">이메일</label>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            required
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+            placeholder="admin@example.com"
+          />
+        </div>
+        <div>
+          <label for="login-password" class="text-xs font-medium text-red-200/90">비밀번호</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+          />
+        </div>
+        <p id="login-msg" class="hidden text-sm text-red-300/90" role="alert"></p>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <button
+            type="submit"
+            id="login-submit"
+            class="inline-flex w-fit items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+          >
+            로그인
+          </button>
+          <a
+            href="admin-signup.html"
+            class="text-sm text-red-200/80 underline decoration-red-200/25 underline-offset-2 transition hover:text-red-50"
+          >
+            관리자 계정이 없으면 만들기
+          </a>
+        </div>
+      </form>
+    </section>
+    </div>
+  </div>
+
+  <!-- 로그인 후: 사이드바 대시보드 -->
+  <div
+    id="layout-dashboard"
+    class="hidden min-h-screen bg-surface-base lg:flex lg:min-h-screen lg:flex-row"
+  >
+    <div
+      id="sidebar-overlay"
+      class="fixed inset-0 z-30 hidden bg-surface-void/75 lg:hidden"
+      aria-hidden="true"
+    ></div>
+
+    <aside
+      id="admin-sidebar"
+      class="fixed inset-y-0 left-0 z-40 flex h-full w-[min(17rem,calc(100vw-2.5rem))] max-w-[85vw] flex-col border-r border-warm-600/20 bg-surface-lift shadow-[4px_0_24px_rgba(0,0,0,0.35)] transition-transform duration-200 ease-out -translate-x-full lg:relative lg:z-0 lg:h-auto lg:min-h-screen lg:max-w-[17rem] lg:translate-x-0 lg:flex-shrink-0 lg:shadow-none"
+      aria-label="관리 메뉴"
+    >
+      <div class="flex min-h-0 flex-1 flex-col">
+        <div class="border-b border-warm-600/25 px-4 py-5 sm:px-5 sm:py-6">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[0.65rem] font-medium uppercase tracking-wider text-red-200/45">Admin</p>
+              <p class="mt-1 font-moondance text-lg leading-tight text-red-200/90">Reservation Desk</p>
+              <p class="mt-1 text-xs text-red-100/52">스시 카이덴</p>
+            </div>
+            <button
+              type="button"
+              id="btn-sidebar-close"
+              class="shrink-0 rounded-sm p-2 text-red-200/85 transition hover:bg-warm-800/45 hover:text-red-50 lg:hidden"
+              aria-label="메뉴 닫기"
+            >
+              <i class="ph ph-x text-xl leading-none" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4" aria-label="섹션">
+          <button
+            type="button"
+            class="admin-nav-btn flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left text-sm text-red-200/75 transition hover:bg-warm-800/35 hover:text-red-50"
+            data-view="reservations"
+          >
+            <i class="ph ph-calendar-blank text-lg leading-none text-red-200/55" aria-hidden="true"></i>
+            예약 목록
+          </button>
+          <button
+            type="button"
+            id="nav-staff"
+            class="admin-nav-btn flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left text-sm text-red-200/75 transition hover:bg-warm-800/35 hover:text-red-50 hidden"
+            data-view="staff"
+          >
+            <i class="ph ph-users-three text-lg leading-none text-red-200/55" aria-hidden="true"></i>
+            팀원 관리
+          </button>
+          <button
+            type="button"
+            id="nav-menu"
+            class="admin-nav-btn flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left text-sm text-red-200/75 transition hover:bg-warm-800/35 hover:text-red-50 hidden"
+            data-view="menu"
+          >
+            <i class="ph ph-fork-knife text-lg leading-none text-red-200/55" aria-hidden="true"></i>
+            메뉴 관리
+          </button>
+        </nav>
+
+        <div
+          id="sidebar-profile"
+          class="border-t border-warm-600/25 px-3 py-4"
+          aria-label="로그인 계정"
+        >
+          <div class="flex gap-3">
+            <span
+              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-warm-800/55 text-red-200/70"
+              aria-hidden="true"
+            >
+              <i class="ph ph-user text-lg leading-none"></i>
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="text-[0.65rem] font-medium uppercase tracking-wide text-red-200/40">내 계정</p>
+              <p id="staff-role-bar" class="mt-1 hidden text-xs leading-relaxed text-red-200/82 sm:text-[0.8125rem]"></p>
+              <p id="staff-role-warn" class="mt-2 hidden text-xs leading-relaxed text-red-300/90"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-warm-600/25 px-3 py-4">
+          <a
+            href="index.html"
+            class="mb-1 flex items-center gap-2.5 px-3 py-2 text-sm text-red-200/75 transition hover:text-red-50"
+          >
+            <i class="ph ph-arrow-square-out text-base leading-none text-red-200/50" aria-hidden="true"></i>
+            사이트로
+          </a>
+          <button
+            type="button"
+            id="btn-logout"
+            class="inline-flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-red-200/75 transition hover:text-red-50 hidden"
+          >
+            <i class="ph ph-sign-out text-base leading-none text-red-200/50" aria-hidden="true"></i>
+            로그아웃
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen min-w-0 flex-1 flex-col">
+      <header
+        class="sticky top-0 z-20 flex items-center gap-3 border-b border-warm-600/25 bg-surface-base/95 px-3 py-3 backdrop-blur-sm lg:hidden"
+      >
+        <button
+          type="button"
+          id="btn-sidebar-open"
+          class="inline-flex shrink-0 items-center justify-center rounded-sm p-2 text-red-200/90 transition hover:bg-warm-800/40 hover:text-red-50"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="admin-sidebar"
+        >
+          <i class="ph ph-list text-2xl leading-none" aria-hidden="true"></i>
+        </button>
+        <span id="mobile-view-title" class="min-w-0 truncate text-sm font-medium text-red-100/90">예약 목록</span>
+      </header>
+
+      <main class="flex-1 overflow-auto px-3 py-5 min-[400px]:px-4 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
+        <div class="mx-auto max-w-6xl">
+          <!-- 예약 -->
+          <div id="view-reservations" class="view-pane">
+            <div class="mb-6 hidden lg:block">
+              <h2 class="text-xl font-medium leading-tight text-red-50 sm:text-2xl">예약 신청</h2>
+              <p class="mt-1.5 text-sm text-red-100/60">
+                Supabase
+                <code class="rounded bg-surface-panel px-1 py-0.5 text-xs text-red-200/75">reservation_requests</code>
+                · 상태·필터·최신순
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <h3 class="text-lg font-medium text-red-50">예약 목록</h3>
+                <p id="list-summary" class="mt-1 text-sm text-red-100/65"></p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <a
+                  href="index.html"
+                  class="inline-flex items-center justify-center bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+                >
+                  <i class="ph ph-house mr-2 text-base leading-none" aria-hidden="true"></i>
+                  메인으로
+                </a>
+                <button
+                  type="button"
+                  id="btn-refresh"
+                  class="inline-flex items-center justify-center bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+                >
+                  <i class="ph ph-arrows-clockwise mr-2 text-base leading-none" aria-hidden="true"></i>
+                  새로고침
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              <div class="flex items-center gap-3 bg-surface-panel px-4 py-4 sm:px-5">
+                <span
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm bg-amber-500/12 text-amber-300/90"
+                  aria-hidden="true"
+                >
+                  <i class="ph ph-clock text-xl leading-none"></i>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium text-red-200/75">대기 중</p>
+                  <p id="stat-pending" class="mt-0.5 text-2xl font-medium tabular-nums text-red-50">0</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-surface-panel px-4 py-4 sm:px-5">
+                <span
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm bg-emerald-500/12 text-emerald-300/85"
+                  aria-hidden="true"
+                >
+                  <i class="ph ph-check-circle text-xl leading-none"></i>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium text-red-200/75">확정</p>
+                  <p id="stat-confirmed" class="mt-0.5 text-2xl font-medium tabular-nums text-red-50">0</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-surface-panel px-4 py-4 sm:px-5">
+                <span
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm bg-red-500/12 text-red-300/85"
+                  aria-hidden="true"
+                >
+                  <i class="ph ph-x-circle text-xl leading-none"></i>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium text-red-200/75">취소</p>
+                  <p id="stat-cancelled" class="mt-0.5 text-2xl font-medium tabular-nums text-red-50">0</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-surface-panel px-4 py-4 sm:px-5">
+                <span
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm bg-sky-500/12 text-sky-300/85"
+                  aria-hidden="true"
+                >
+                  <i class="ph ph-calendar-check text-xl leading-none"></i>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium text-red-200/75">완료</p>
+                  <p id="stat-completed" class="mt-0.5 text-2xl font-medium tabular-nums text-red-50">0</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 bg-surface-panel p-4 sm:p-6">
+              <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-12 xl:items-end">
+                <div class="xl:col-span-2">
+                  <label for="res-filter-status" class="text-xs font-medium text-red-200/90">상태 필터</label>
+                  <div class="relative mt-1.5">
+                    <select
+                      id="res-filter-status"
+                      class="w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-9 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                    >
+                      <option value="">전체</option>
+                      <option value="pending">대기 중</option>
+                      <option value="confirmed">확정</option>
+                      <option value="cancelled">취소</option>
+                      <option value="completed">완료</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="xl:col-span-2">
+                  <label for="res-filter-date" class="text-xs font-medium text-red-200/90">날짜 필터</label>
+                  <input
+                    id="res-filter-date"
+                    type="date"
+                    class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                  />
+                </div>
+                <div class="sm:col-span-2 xl:col-span-5">
+                  <label for="res-filter-search" class="text-xs font-medium text-red-200/90"
+                    >검색 (이름/전화번호)</label
+                  >
+                  <input
+                    id="res-filter-search"
+                    type="search"
+                    autocomplete="off"
+                    placeholder="검색어 입력"
+                    class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                  />
+                </div>
+                <div class="sm:col-span-2 xl:col-span-3">
+                  <button
+                    type="button"
+                    id="btn-res-filter-apply"
+                    class="inline-flex w-full items-center justify-center gap-2 bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+                  >
+                    <i class="ph ph-funnel text-base leading-none" aria-hidden="true"></i>
+                    필터 적용
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p id="list-msg" class="mt-4 hidden text-sm text-red-300/90" role="status"></p>
+            <div class="mt-6 overflow-x-auto bg-surface-panel">
+              <table class="min-w-[920px] w-full text-left text-sm">
+                <thead>
+                  <tr class="border-b border-warm-600/45 text-xs font-semibold uppercase tracking-wide text-red-200/70">
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">예약 ID</th>
+                    <th class="min-w-[140px] px-4 py-3 sm:px-5 sm:py-4">고객정보</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">예약일시</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">인원 / 코스</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">상태</th>
+                    <th class="min-w-[120px] px-4 py-3 sm:px-5 sm:py-4">요청사항</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">관리</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-rows" class="divide-y divide-warm-600/35 text-red-100/85"></tbody>
+              </table>
+            </div>
+            <p id="list-empty" class="mt-8 hidden text-center text-sm text-red-100/55">아직 접수된 예약이 없습니다.</p>
+
+            <div
+              id="overlay-res-status"
+              class="fixed inset-0 z-[60] hidden items-center justify-center bg-surface-void/80 p-4"
+              aria-hidden="true"
+            >
+              <div
+                class="w-full max-w-sm bg-surface-panel p-6 shadow-xl ring-1 ring-warm-600/30"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="res-status-dialog-title"
+              >
+                <h4 id="res-status-dialog-title" class="text-lg font-medium text-red-50">예약 상태 변경</h4>
+                <input type="hidden" id="res-status-edit-id" value="" />
+                <label for="res-status-select" class="mt-5 block text-xs font-medium text-red-200/90">상태</label>
+                <select
+                  id="res-status-select"
+                  class="mt-1.5 w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-9 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                >
+                  <option value="pending">대기 중</option>
+                  <option value="confirmed">확정</option>
+                  <option value="cancelled">취소</option>
+                  <option value="completed">완료</option>
+                </select>
+                <div class="mt-6 flex flex-wrap justify-end gap-2">
+                  <button
+                    type="button"
+                    id="res-status-cancel"
+                    class="inline-flex items-center justify-center bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    id="res-status-save"
+                    class="inline-flex items-center justify-center bg-btn-snow px-5 py-2.5 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+                  >
+                    저장
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 팀원 -->
+          <div id="view-staff" class="view-pane hidden">
+            <div class="mb-6 hidden lg:block">
+              <h2 class="text-xl font-medium leading-tight text-red-50 sm:text-2xl">팀원 관리</h2>
+              <p class="mt-1.5 text-sm text-red-100/60">등록된 직원 · 팀원 초대</p>
+            </div>
+
+      <section id="panel-invite" class="mb-10 hidden bg-surface-panel p-6 sm:p-8 lg:p-10">
+        <h3 class="flex items-center gap-2 text-lg font-medium text-red-50 sm:text-xl">
+          <i class="ph-fill ph-user-plus text-[1em] leading-none text-red-200/70" aria-hidden="true"></i>
+          팀원 등록
+        </h3>
+        <p class="mt-2 text-xs leading-relaxed text-red-100/62 sm:text-sm">
+          새 계정은 Supabase Edge Function <code class="rounded bg-surface-base/80 px-1 py-0.5 text-[0.7rem] text-red-200/80">staff-invite</code>로 생성됩니다. 프로젝트에 함수를 배포한 뒤 사용하세요
+          (<span class="text-red-200/75">supabase/functions/staff-invite</span>).
+        </p>
+        <form id="form-invite" class="mt-8 grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label for="invite-email" class="text-xs font-medium text-red-200/90">새 계정 이메일</label>
+            <input
+              id="invite-email"
+              type="email"
+              autocomplete="off"
+              required
+              class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              placeholder="staff@example.com"
+            />
+          </div>
+          <div>
+            <label for="invite-password" class="text-xs font-medium text-red-200/90">임시 비밀번호</label>
+            <input
+              id="invite-password"
+              type="password"
+              autocomplete="new-password"
+              required
+              minlength="6"
+              class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+            />
+          </div>
+          <div>
+            <label for="invite-role" class="text-xs font-medium text-red-200/90">역할</label>
+            <div class="relative mt-1.5">
+              <select
+                id="invite-role"
+                class="w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-9 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              >
+                <option value="operator">운영자 (예약 목록 조회)</option>
+                <option value="admin">관리자 (조회 + 팀원 등록)</option>
+              </select>
+              <i
+                class="ph ph-caret-down pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-base leading-none text-warm-500/70"
+                aria-hidden="true"
+              ></i>
+            </div>
+          </div>
+          <div class="sm:col-span-2">
+            <p id="invite-msg" class="hidden text-sm leading-relaxed" role="status"></p>
+            <button
+              type="submit"
+              id="invite-submit"
+              class="mt-2 inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+            >
+              계정 만들기
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="panel-staff-list" class="mb-10 hidden">
+        <h3 class="text-base font-medium text-red-50 sm:text-lg">등록된 직원</h3>
+        <p class="mt-1 text-xs text-red-100/55 sm:text-sm">역할 및 등록일 (이메일은 대시보드 Users에서 확인)</p>
+        <div class="mt-4 overflow-x-auto bg-surface-panel">
+          <table class="min-w-[480px] w-full text-left text-sm">
+            <thead>
+              <tr class="border-b border-warm-600/45 text-xs font-semibold uppercase tracking-wide text-red-200/70">
+                <th class="px-4 py-3 sm:px-5 sm:py-4">역할</th>
+                <th class="px-4 py-3 sm:px-5 sm:py-4">사용자 ID</th>
+                <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">등록일</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-staff" class="divide-y divide-warm-600/35 text-red-100/85"></tbody>
+          </table>
+        </div>
+      </section>
+          </div>
+
+          <!-- 메뉴 관리 (관리자) -->
+          <div id="view-menu" class="view-pane hidden">
+            <div class="mb-6 hidden lg:block">
+              <h2 class="text-xl font-medium leading-tight text-red-50 sm:text-2xl">메뉴 관리</h2>
+              <p class="mt-1.5 text-sm text-red-100/60">
+                <code class="rounded bg-surface-panel px-1 py-0.5 text-xs text-red-200/75">course_menu_items</code>
+                · 메인 페이지 Omakase 코스 카드와 연동 (관리자만 수정)
+              </p>
+            </div>
+            <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+              <button
+                type="button"
+                id="btn-refresh-menu"
+                class="inline-flex items-center justify-center bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+              >
+                <i class="ph ph-arrows-clockwise mr-2 text-base leading-none" aria-hidden="true"></i>
+                목록 새로고침
+              </button>
+              <button
+                type="button"
+                id="btn-menu-add"
+                class="inline-flex items-center justify-center bg-btn-snow px-5 py-2.5 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+              >
+                <i class="ph ph-plus mr-2 text-base leading-none" aria-hidden="true"></i>
+                새 메뉴 추가
+              </button>
+            </div>
+            <p id="course-menu-admin-msg" class="mb-4 hidden text-sm leading-relaxed" role="status"></p>
+
+            <div class="overflow-x-auto bg-surface-panel">
+              <table class="w-full min-w-[20rem] text-left text-sm sm:min-w-[40rem]">
+                <thead>
+                  <tr class="border-b border-warm-600/45 text-xs font-semibold uppercase tracking-wide text-red-200/70">
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">순서</th>
+                    <th class="min-w-[10rem] px-4 py-3 sm:min-w-[12rem] sm:px-5 sm:py-4">한글명</th>
+                    <th class="min-w-[6rem] px-4 py-3 sm:px-5 sm:py-4">영문</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">노출</th>
+                    <th class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">관리</th>
+                  </tr>
+                </thead>
+                <tbody id="course-menu-admin-tbody" class="divide-y divide-warm-600/35 text-red-100/85"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div
+        id="overlay-course-menu-edit"
+        class="fixed inset-0 z-[70] hidden items-center justify-center overflow-y-auto bg-surface-void/80 p-4 sm:p-6"
+        aria-hidden="true"
+      >
+        <div
+          class="my-auto w-full max-w-2xl bg-surface-panel p-5 shadow-xl ring-1 ring-warm-600/30 sm:p-8 lg:p-10"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="course-menu-edit-heading"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <h3 id="course-menu-edit-heading" class="text-lg font-medium text-red-50 sm:text-xl">메뉴 편집</h3>
+              <p class="mt-1 text-xs text-red-100/55 sm:text-sm">저장 후 목록이 갱신됩니다.</p>
+            </div>
+            <button
+              type="button"
+              id="btn-course-menu-modal-close"
+              class="shrink-0 rounded-sm p-2 text-red-200/85 transition hover:bg-warm-800/45 hover:text-red-50"
+              aria-label="닫기"
+            >
+              <i class="ph ph-x text-xl leading-none" aria-hidden="true"></i>
+            </button>
+          </div>
+          <form id="form-course-menu-edit" class="mt-6 grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2">
+            <input type="hidden" id="menu-edit-id" value="" autocomplete="off" />
+            <p id="course-menu-form-msg" class="hidden text-sm leading-relaxed sm:col-span-2" role="alert"></p>
+            <div>
+              <label for="menu-edit-sort_order" class="text-xs font-medium text-red-200/90">표시 순서</label>
+              <input
+                type="number"
+                id="menu-edit-sort_order"
+                required
+                class="mt-1 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div class="flex items-end pb-2 sm:justify-end sm:pb-0">
+              <label class="flex cursor-pointer items-center gap-2 text-sm text-red-200/85">
+                <input type="checkbox" id="menu-edit-is_active" class="h-4 w-4 accent-red-800/80" checked />
+                사이트에 노출
+              </label>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="menu-edit-title_ko" class="text-xs font-medium text-red-200/90">한글 제목</label>
+              <input
+                type="text"
+                id="menu-edit-title_ko"
+                required
+                class="mt-1 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="menu-edit-title_en" class="text-xs font-medium text-red-200/90">영문 부제 (선택)</label>
+              <input
+                type="text"
+                id="menu-edit-title_en"
+                class="mt-1 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <span class="text-xs font-medium text-red-200/90">메뉴 이미지</span>
+              <p class="mt-1 text-xs leading-relaxed text-red-100/50">
+                URL을 입력하거나 이미지 파일을 선택하세요. 파일을 선택하면 저장 시 Supabase Storage(
+                <code class="text-red-200/70">course-menu-images</code>
+                )에 올라가며, 최대 5MB · JPG·PNG·WebP·GIF·SVG 입니다.
+              </p>
+              <label for="menu-edit-image_url" class="mt-3 block text-xs font-medium text-red-200/90">이미지 URL</label>
+              <input
+                type="text"
+                id="menu-edit-image_url"
+                placeholder="sushi1.png 또는 https://..."
+                class="mt-1 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              />
+              <div class="mt-4 flex flex-wrap items-center gap-3">
+                <input
+                  type="file"
+                  id="menu-edit-image_file"
+                  accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml,.jpg,.jpeg,.png,.webp,.gif,.svg"
+                  class="sr-only"
+                />
+                <label
+                  for="menu-edit-image_file"
+                  class="inline-flex cursor-pointer items-center justify-center bg-warm-800 px-5 py-2.5 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+                >
+                  <i class="ph ph-upload-simple mr-2 text-base leading-none" aria-hidden="true"></i>
+                  파일 선택
+                </label>
+                <button
+                  type="button"
+                  id="btn-menu-image-file-clear"
+                  class="hidden inline-flex items-center justify-center bg-warm-800/60 px-4 py-2.5 text-sm font-normal text-red-200/90 transition hover:bg-warm-800 hover:text-red-50"
+                >
+                  파일 선택 취소
+                </button>
+                <span id="menu-edit-image-file-hint" class="text-xs text-red-100/50"></span>
+              </div>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="menu-edit-image_alt" class="text-xs font-medium text-red-200/90">이미지 alt</label>
+              <input
+                type="text"
+                id="menu-edit-image_alt"
+                required
+                class="mt-1 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="menu-edit-description" class="text-xs font-medium text-red-200/90">설명</label>
+              <textarea
+                id="menu-edit-description"
+                rows="4"
+                required
+                class="mt-1 w-full resize-y border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+              ></textarea>
+            </div>
+            <div class="sm:col-span-2 flex flex-wrap gap-2">
+              <button
+                type="submit"
+                id="btn-menu-edit-save"
+                class="inline-flex items-center justify-center bg-btn-snow px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-snow-hover"
+              >
+                저장
+              </button>
+              <button
+                type="button"
+                id="btn-menu-edit-cancel"
+                class="inline-flex items-center justify-center bg-warm-800 px-6 py-3 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+              >
+                취소
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    var SUPABASE_URL = 'https://mnzdnsfatcqtmqktihgl.supabase.co';
+    var SUPABASE_ANON_KEY =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uemRuc2ZhdGNxdG1xa3RpaGdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MDM5NDgsImV4cCI6MjA5MTM3OTk0OH0.e1FcCKwdNMHWQKULRczmuEXnZoYISRWziA2yLcYdnP4';
+
+    var supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    var activeNavView = 'reservations';
+
+    var layoutLogin = document.getElementById('layout-login');
+    var layoutDashboard = document.getElementById('layout-dashboard');
+    var adminSidebar = document.getElementById('admin-sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    var btnSidebarOpen = document.getElementById('btn-sidebar-open');
+    var btnSidebarClose = document.getElementById('btn-sidebar-close');
+    var viewReservations = document.getElementById('view-reservations');
+    var viewStaff = document.getElementById('view-staff');
+    var viewMenu = document.getElementById('view-menu');
+    var mobileViewTitle = document.getElementById('mobile-view-title');
+    var navStaffBtn = document.getElementById('nav-staff');
+    var navMenuBtn = document.getElementById('nav-menu');
+    var courseMenuAdminTbody = document.getElementById('course-menu-admin-tbody');
+    var courseMenuAdminMsg = document.getElementById('course-menu-admin-msg');
+    var overlayCourseMenuEdit = document.getElementById('overlay-course-menu-edit');
+    var btnCourseMenuModalClose = document.getElementById('btn-course-menu-modal-close');
+    var courseMenuFormMsg = document.getElementById('course-menu-form-msg');
+    var courseMenuEditHeading = document.getElementById('course-menu-edit-heading');
+    var formCourseMenuEdit = document.getElementById('form-course-menu-edit');
+    var btnMenuEditCancel = document.getElementById('btn-menu-edit-cancel');
+    var btnRefreshMenu = document.getElementById('btn-refresh-menu');
+    var btnMenuAdd = document.getElementById('btn-menu-add');
+    var menuEditImageFile = document.getElementById('menu-edit-image_file');
+    var btnMenuImageFileClear = document.getElementById('btn-menu-image-file-clear');
+    var menuEditImageFileHint = document.getElementById('menu-edit-image-file-hint');
+
+    var cachedCourseMenuItems = [];
+    var pendingMenuImageFile = null;
+    var MENU_IMAGE_BUCKET = 'course-menu-images';
+    var MENU_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+    var panelLogin = document.getElementById('panel-login');
+    var formLogin = document.getElementById('form-login');
+    var loginMsg = document.getElementById('login-msg');
+    var loginSubmit = document.getElementById('login-submit');
+    var btnLogout = document.getElementById('btn-logout');
+    var btnRefresh = document.getElementById('btn-refresh');
+    var tbody = document.getElementById('tbody-rows');
+    var listSummary = document.getElementById('list-summary');
+    var listMsg = document.getElementById('list-msg');
+    var listEmpty = document.getElementById('list-empty');
+    var statPending = document.getElementById('stat-pending');
+    var statConfirmed = document.getElementById('stat-confirmed');
+    var statCancelled = document.getElementById('stat-cancelled');
+    var statCompleted = document.getElementById('stat-completed');
+    var resFilterStatus = document.getElementById('res-filter-status');
+    var resFilterDate = document.getElementById('res-filter-date');
+    var resFilterSearch = document.getElementById('res-filter-search');
+    var btnResFilterApply = document.getElementById('btn-res-filter-apply');
+    var overlayResStatus = document.getElementById('overlay-res-status');
+    var resStatusEditId = document.getElementById('res-status-edit-id');
+    var resStatusSelect = document.getElementById('res-status-select');
+    var resStatusCancel = document.getElementById('res-status-cancel');
+    var resStatusSave = document.getElementById('res-status-save');
+
+    var cachedReservations = [];
+    var currentStaffRole = null;
+    var staffRoleBar = document.getElementById('staff-role-bar');
+    var staffRoleWarn = document.getElementById('staff-role-warn');
+    var panelInvite = document.getElementById('panel-invite');
+    var panelStaffList = document.getElementById('panel-staff-list');
+    var formInvite = document.getElementById('form-invite');
+    var inviteMsg = document.getElementById('invite-msg');
+    var inviteSubmit = document.getElementById('invite-submit');
+    var tbodyStaff = document.getElementById('tbody-staff');
+
+    function showLoginMsg(text) {
+      loginMsg.textContent = text;
+      loginMsg.classList.remove('hidden');
+    }
+
+    function hideLoginMsg() {
+      loginMsg.textContent = '';
+      loginMsg.classList.add('hidden');
+    }
+
+    function showListMsg(text) {
+      listMsg.textContent = text;
+      listMsg.classList.remove('hidden');
+    }
+
+    function hideListMsg() {
+      listMsg.textContent = '';
+      listMsg.classList.add('hidden');
+    }
+
+    function showInviteMsg(text, ok) {
+      inviteMsg.textContent = text;
+      inviteMsg.classList.remove('hidden', 'text-red-200/85', 'text-red-300/90');
+      if (ok) {
+        inviteMsg.classList.add('text-red-200/85');
+      } else {
+        inviteMsg.classList.add('text-red-300/90');
+      }
+    }
+
+    function hideInviteMsg() {
+      inviteMsg.textContent = '';
+      inviteMsg.classList.add('hidden');
+      inviteMsg.classList.remove('text-red-200/85', 'text-red-300/90');
+    }
+
+    function setActiveNavView(name) {
+      activeNavView = name;
+      if (viewReservations) {
+        viewReservations.classList.toggle('hidden', name !== 'reservations');
+      }
+      if (viewStaff) {
+        viewStaff.classList.toggle('hidden', name !== 'staff');
+      }
+      if (viewMenu) {
+        viewMenu.classList.toggle('hidden', name !== 'menu');
+      }
+      document.querySelectorAll('.admin-nav-btn').forEach(function (btn) {
+        var v = btn.getAttribute('data-view');
+        var active = v === name;
+        btn.classList.toggle('bg-warm-800/45', active);
+        btn.classList.toggle('text-red-50', active);
+        btn.classList.toggle('text-red-200/75', !active);
+      });
+      if (mobileViewTitle) {
+        if (name === 'staff') {
+          mobileViewTitle.textContent = '팀원 관리';
+        } else if (name === 'menu') {
+          mobileViewTitle.textContent = '메뉴 관리';
+        } else {
+          mobileViewTitle.textContent = '예약 목록';
+        }
+      }
+      if (name === 'menu') {
+        loadCourseMenuAdmin();
+      }
+    }
+
+    function isWideDashboardLayout() {
+      return window.matchMedia('(min-width: 1024px)').matches;
+    }
+
+    function openSidebar() {
+      if (adminSidebar) {
+        adminSidebar.classList.remove('-translate-x-full');
+      }
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.remove('hidden');
+      }
+      if (btnSidebarOpen) {
+        btnSidebarOpen.setAttribute('aria-expanded', 'true');
+      }
+      if (!isWideDashboardLayout()) {
+        document.body.classList.add('admin-drawer-open');
+      }
+    }
+
+    function closeSidebar() {
+      if (adminSidebar) {
+        adminSidebar.classList.add('-translate-x-full');
+      }
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.add('hidden');
+      }
+      if (btnSidebarOpen) {
+        btnSidebarOpen.setAttribute('aria-expanded', 'false');
+      }
+      document.body.classList.remove('admin-drawer-open');
+    }
+
+    function resetStaffUi() {
+      currentStaffRole = null;
+      staffRoleBar.classList.add('hidden');
+      staffRoleWarn.classList.add('hidden');
+      panelInvite.classList.add('hidden');
+      panelStaffList.classList.add('hidden');
+      tbodyStaff.innerHTML = '';
+      hideInviteMsg();
+      if (navStaffBtn) {
+        navStaffBtn.classList.add('hidden');
+      }
+      if (navMenuBtn) {
+        navMenuBtn.classList.add('hidden');
+      }
+      setActiveNavView('reservations');
+    }
+
+    function showCourseMenuAdminMsg(text, ok) {
+      if (!courseMenuAdminMsg) return;
+      courseMenuAdminMsg.textContent = text;
+      courseMenuAdminMsg.classList.remove('hidden', 'text-red-200/85', 'text-red-300/90');
+      courseMenuAdminMsg.classList.add(ok ? 'text-red-200/85' : 'text-red-300/90');
+    }
+
+    function hideCourseMenuAdminMsg() {
+      if (!courseMenuAdminMsg) return;
+      courseMenuAdminMsg.textContent = '';
+      courseMenuAdminMsg.classList.add('hidden');
+      courseMenuAdminMsg.classList.remove('text-red-200/85', 'text-red-300/90');
+    }
+
+    function showCourseMenuFormMsg(text, ok) {
+      if (!courseMenuFormMsg) return;
+      courseMenuFormMsg.textContent = text;
+      courseMenuFormMsg.classList.remove('hidden', 'text-red-200/85', 'text-red-300/90');
+      courseMenuFormMsg.classList.add(ok ? 'text-red-200/85' : 'text-red-300/90');
+    }
+
+    function hideCourseMenuFormMsg() {
+      if (!courseMenuFormMsg) return;
+      courseMenuFormMsg.textContent = '';
+      courseMenuFormMsg.classList.add('hidden');
+      courseMenuFormMsg.classList.remove('text-red-200/85', 'text-red-300/90');
+    }
+
+    function escMenuAttr(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+    }
+
+    function escMenuHtml(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function hideCourseMenuEditPanel() {
+      if (overlayCourseMenuEdit) {
+        overlayCourseMenuEdit.classList.add('hidden');
+        overlayCourseMenuEdit.classList.remove('flex');
+        overlayCourseMenuEdit.setAttribute('aria-hidden', 'true');
+      }
+      document.body.classList.remove('admin-course-menu-modal-open');
+      hideCourseMenuFormMsg();
+      clearCourseMenuEditForm();
+    }
+
+    function openCourseMenuEditOverlay() {
+      if (!overlayCourseMenuEdit) return;
+      overlayCourseMenuEdit.classList.remove('hidden');
+      overlayCourseMenuEdit.classList.add('flex');
+      overlayCourseMenuEdit.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('admin-course-menu-modal-open');
+      requestAnimationFrame(function () {
+        var el = document.getElementById('menu-edit-title_ko');
+        if (el) el.focus();
+      });
+    }
+
+    function syncMenuImageFileUi() {
+      if (btnMenuImageFileClear) {
+        if (pendingMenuImageFile) {
+          btnMenuImageFileClear.classList.remove('hidden');
+        } else {
+          btnMenuImageFileClear.classList.add('hidden');
+        }
+      }
+      if (menuEditImageFileHint) {
+        menuEditImageFileHint.textContent = pendingMenuImageFile
+          ? '저장 시 업로드: ' + (pendingMenuImageFile.name || '이미지')
+          : '';
+      }
+    }
+
+    function clearPendingMenuImageFile() {
+      pendingMenuImageFile = null;
+      if (menuEditImageFile) menuEditImageFile.value = '';
+      syncMenuImageFileUi();
+    }
+
+    function clearCourseMenuEditForm() {
+      var idEl = document.getElementById('menu-edit-id');
+      if (idEl) idEl.value = '';
+      var so = document.getElementById('menu-edit-sort_order');
+      if (so) so.value = '';
+      var tko = document.getElementById('menu-edit-title_ko');
+      if (tko) tko.value = '';
+      var ten = document.getElementById('menu-edit-title_en');
+      if (ten) ten.value = '';
+      var iu = document.getElementById('menu-edit-image_url');
+      if (iu) iu.value = '';
+      var ia = document.getElementById('menu-edit-image_alt');
+      if (ia) ia.value = '';
+      var desc = document.getElementById('menu-edit-description');
+      if (desc) desc.value = '';
+      var act = document.getElementById('menu-edit-is_active');
+      if (act) act.checked = true;
+      clearPendingMenuImageFile();
+    }
+
+    function fillCourseMenuEditForm(row) {
+      clearPendingMenuImageFile();
+      document.getElementById('menu-edit-id').value = row.id ? String(row.id) : '';
+      document.getElementById('menu-edit-sort_order').value =
+        row.sort_order != null ? String(row.sort_order) : '0';
+      document.getElementById('menu-edit-title_ko').value = row.title_ko || '';
+      document.getElementById('menu-edit-title_en').value = row.title_en || '';
+      document.getElementById('menu-edit-image_url').value = row.image_url || '';
+      document.getElementById('menu-edit-image_alt').value = row.image_alt || '';
+      document.getElementById('menu-edit-description').value = row.description || '';
+      document.getElementById('menu-edit-is_active').checked = row.is_active !== false;
+    }
+
+    function openCourseMenuEditNew() {
+      var max = 0;
+      cachedCourseMenuItems.forEach(function (r) {
+        var n = parseInt(r.sort_order, 10);
+        if (!isNaN(n) && n > max) max = n;
+      });
+      hideCourseMenuFormMsg();
+      clearCourseMenuEditForm();
+      document.getElementById('menu-edit-sort_order').value = String(max + 1);
+      document.getElementById('menu-edit-is_active').checked = true;
+      if (courseMenuEditHeading) {
+        courseMenuEditHeading.textContent = '새 메뉴 등록';
+      }
+      openCourseMenuEditOverlay();
+    }
+
+    function openCourseMenuEditExisting(row) {
+      hideCourseMenuFormMsg();
+      fillCourseMenuEditForm(row);
+      if (courseMenuEditHeading) {
+        courseMenuEditHeading.textContent = '메뉴 수정';
+      }
+      openCourseMenuEditOverlay();
+    }
+
+    function courseMenuListThumbSrc(url) {
+      if (!url) return '';
+      var t = String(url).trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:/i.test(t)) return t;
+      return t;
+    }
+
+    function menuImageExtFromFile(file) {
+      var name = (file && file.name) || '';
+      var ext = (name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (ext === 'jpeg') ext = 'jpg';
+      var allowed = { jpg: 1, png: 1, webp: 1, gif: 1, svg: 1 };
+      if (allowed[ext]) return ext;
+      var mt = (file && file.type) || '';
+      if (mt === 'image/jpeg') return 'jpg';
+      if (mt === 'image/png') return 'png';
+      if (mt === 'image/webp') return 'webp';
+      if (mt === 'image/gif') return 'gif';
+      if (mt === 'image/svg+xml') return 'svg';
+      return 'jpg';
+    }
+
+    async function uploadCourseMenuImageToStorage(file) {
+      var ext = menuImageExtFromFile(file);
+      var uid =
+        typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : 'm' + Date.now() + '-' + Math.random().toString(36).slice(2, 11);
+      var path = 'menu/' + uid + '.' + ext;
+      var result = await supabase.storage.from(MENU_IMAGE_BUCKET).upload(path, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type || 'image/jpeg',
+      });
+      if (result.error) {
+        return {
+          error:
+            result.error.message ||
+            '이미지 업로드에 실패했습니다. Supabase Storage 버킷·정책(supabase-setup.sql 하단)을 확인해 주세요.',
+        };
+      }
+      var pub = supabase.storage.from(MENU_IMAGE_BUCKET).getPublicUrl(path);
+      var url = pub.data && pub.data.publicUrl ? pub.data.publicUrl : '';
+      if (!url) return { error: '공개 URL을 가져오지 못했습니다.' };
+      return { publicUrl: url };
+    }
+
+    function courseMenuListRowHtml(row) {
+      var id = row.id ? String(row.id) : '';
+      var en = (row.title_en || '').trim();
+      var enCell = en ? escMenuHtml(en) : '<span class="text-red-100/40">—</span>';
+      var activeCell =
+        row.is_active !== false
+          ? '<span class="text-red-200/80">노출</span>'
+          : '<span class="text-red-100/45">숨김</span>';
+      var thumbSrc = courseMenuListThumbSrc(row.image_url);
+      var thumbAlt = escMenuAttr(row.image_alt || row.title_ko || '');
+      var thumbBlock = thumbSrc
+        ? '<img src="' +
+          escMenuAttr(thumbSrc) +
+          '" alt="' +
+          thumbAlt +
+          '" class="h-10 w-10 shrink-0 rounded-sm bg-warm-800/50 object-cover ring-1 ring-warm-600/40 sm:h-12 sm:w-12" loading="lazy" decoding="async" />'
+        : '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-warm-800/50 ring-1 ring-warm-600/35 sm:h-12 sm:w-12" aria-hidden="true"><i class="ph ph-image text-xl text-red-200/35"></i></span>';
+      var titleCell =
+        '<div class="flex min-w-0 items-center gap-3">' +
+        thumbBlock +
+        '<span class="min-w-0 font-medium leading-snug text-red-50">' +
+        escMenuHtml(row.title_ko || '') +
+        '</span></div>';
+      return (
+        '<tr class="align-middle" data-menu-id="' +
+        escMenuAttr(id) +
+        '">' +
+        '<td class="whitespace-nowrap px-4 py-3 text-red-100/75 sm:px-5 sm:py-4">' +
+        escMenuHtml(String(row.sort_order != null ? row.sort_order : '')) +
+        '</td>' +
+        '<td class="px-4 py-3 sm:px-5 sm:py-4">' +
+        titleCell +
+        '</td>' +
+        '<td class="max-w-[12rem] truncate px-4 py-3 text-red-100/70 sm:px-5 sm:py-4">' +
+        enCell +
+        '</td>' +
+        '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+        activeCell +
+        '</td>' +
+        '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+        '<button type="button" class="btn-menu-row-edit mr-1 inline-flex items-center justify-center rounded-sm p-2 text-red-200/85 transition hover:bg-warm-800/45 hover:text-red-50" aria-label="편집">' +
+        '<i class="ph ph-pencil-simple text-lg leading-none" aria-hidden="true"></i>' +
+        '</button>' +
+        '<button type="button" class="btn-menu-row-delete inline-flex items-center justify-center rounded-sm p-2 text-red-300/90 transition hover:bg-warm-800/45 hover:text-red-200" aria-label="삭제">' +
+        '<i class="ph ph-trash text-lg leading-none" aria-hidden="true"></i>' +
+        '</button>' +
+        '</td>' +
+        '</tr>'
+      );
+    }
+
+    function renderCourseMenuAdminList(items) {
+      if (!courseMenuAdminTbody) return;
+      cachedCourseMenuItems = items || [];
+      if (!cachedCourseMenuItems.length) {
+        courseMenuAdminTbody.innerHTML =
+          '<tr><td colspan="5" class="px-4 py-10 text-center text-sm text-red-100/55 sm:px-5">등록된 메뉴가 없습니다. 「새 메뉴 추가」를 눌러 주세요.</td></tr>';
+        return;
+      }
+      courseMenuAdminTbody.innerHTML = cachedCourseMenuItems.map(courseMenuListRowHtml).join('');
+    }
+
+    async function loadCourseMenuAdmin() {
+      if (!courseMenuAdminTbody) return;
+      hideCourseMenuEditPanel();
+      hideCourseMenuAdminMsg();
+      var result = await supabase.from('course_menu_items').select('*').order('sort_order', { ascending: true });
+      if (result.error) {
+        showCourseMenuAdminMsg(
+          result.error.message || '메뉴 목록을 불러오지 못했습니다. 관리자 권한과 course_menu_items RLS를 확인해 주세요.',
+          false
+        );
+        courseMenuAdminTbody.innerHTML = '';
+        cachedCourseMenuItems = [];
+        return;
+      }
+      renderCourseMenuAdminList(result.data || []);
+    }
+
+    function readMenuFormPayload(image_url_override) {
+      var sort_order = parseInt(document.getElementById('menu-edit-sort_order').value, 10);
+      if (isNaN(sort_order)) sort_order = 0;
+      var title_ko = document.getElementById('menu-edit-title_ko').value.trim();
+      var title_en = document.getElementById('menu-edit-title_en').value.trim();
+      var description = document.getElementById('menu-edit-description').value.trim();
+      var image_url =
+        image_url_override != null
+          ? String(image_url_override).trim()
+          : document.getElementById('menu-edit-image_url').value.trim();
+      var image_alt = document.getElementById('menu-edit-image_alt').value.trim();
+      return {
+        sort_order: sort_order,
+        title_ko: title_ko,
+        title_en: title_en || null,
+        description: description,
+        image_url: image_url,
+        image_alt: image_alt,
+        is_active: document.getElementById('menu-edit-is_active').checked,
+      };
+    }
+
+    async function submitCourseMenuForm() {
+      var id = (document.getElementById('menu-edit-id').value || '').trim();
+      var title_ko = document.getElementById('menu-edit-title_ko').value.trim();
+      var description = document.getElementById('menu-edit-description').value.trim();
+      var image_alt = document.getElementById('menu-edit-image_alt').value.trim();
+      if (!title_ko || !description || !image_alt) {
+        showCourseMenuFormMsg('한글 제목, 설명, 이미지 alt는 필수입니다.', false);
+        return;
+      }
+      var image_url_final = document.getElementById('menu-edit-image_url').value.trim();
+      if (pendingMenuImageFile) {
+        if (pendingMenuImageFile.size > MENU_IMAGE_MAX_BYTES) {
+          showCourseMenuFormMsg('이미지 파일은 5MB 이하여야 합니다.', false);
+          return;
+        }
+        showCourseMenuFormMsg('이미지 업로드 중…', true);
+        var up = await uploadCourseMenuImageToStorage(pendingMenuImageFile);
+        if (up.error) {
+          showCourseMenuFormMsg(up.error, false);
+          return;
+        }
+        image_url_final = up.publicUrl;
+        document.getElementById('menu-edit-image_url').value = image_url_final;
+        clearPendingMenuImageFile();
+      }
+      if (!image_url_final) {
+        showCourseMenuFormMsg('이미지 URL을 입력하거나 파일을 선택해 주세요.', false);
+        return;
+      }
+      var payload = readMenuFormPayload(image_url_final);
+      hideCourseMenuFormMsg();
+      hideCourseMenuAdminMsg();
+      var result;
+      if (id) {
+        result = await supabase.from('course_menu_items').update(payload).eq('id', id);
+      } else {
+        result = await supabase.from('course_menu_items').insert([payload]);
+      }
+      if (result.error) {
+        showCourseMenuFormMsg(result.error.message || '저장에 실패했습니다.', false);
+        return;
+      }
+      showCourseMenuAdminMsg('저장되었습니다.', true);
+      await loadCourseMenuAdmin();
+    }
+
+    async function deleteCourseMenuById(id) {
+      if (!id) return;
+      if (!confirm('이 메뉴 항목을 삭제할까요?')) return;
+      hideCourseMenuAdminMsg();
+      var result = await supabase.from('course_menu_items').delete().eq('id', id);
+      if (result.error) {
+        showCourseMenuAdminMsg(result.error.message || '삭제에 실패했습니다.', false);
+        return;
+      }
+      showCourseMenuAdminMsg('삭제되었습니다.', true);
+      await loadCourseMenuAdmin();
+    }
+
+    function staffRoleLabel(role) {
+      if (role === 'admin') return '관리자';
+      if (role === 'operator') return '운영자';
+      return role || '—';
+    }
+
+    async function loadStaffContext() {
+      currentStaffRole = null;
+      staffRoleBar.classList.add('hidden');
+      staffRoleWarn.classList.add('hidden');
+      panelInvite.classList.add('hidden');
+      panelStaffList.classList.add('hidden');
+      if (navStaffBtn) {
+        navStaffBtn.classList.add('hidden');
+      }
+      if (navMenuBtn) {
+        navMenuBtn.classList.add('hidden');
+      }
+
+      var userResult = await supabase.auth.getUser();
+      var user = userResult.data.user;
+      if (!user) {
+        return;
+      }
+
+      var r = await supabase
+        .from('staff_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (r.error) {
+        staffRoleWarn.textContent =
+          '역할 정보를 불러오지 못했습니다. staff_roles 테이블과 RLS 정책을 확인해 주세요.';
+        staffRoleWarn.classList.remove('hidden');
+        setActiveNavView('reservations');
+        return;
+      }
+
+      if (!r.data) {
+        staffRoleWarn.textContent =
+          '이 계정에 staff_roles 행이 없습니다. supabase-setup.sql 주석의 INSERT로 Authentication → Users의 본인 UUID를 admin으로 등록한 뒤 다시 로그인하세요.';
+        staffRoleWarn.classList.remove('hidden');
+        setActiveNavView('reservations');
+        return;
+      }
+
+      var role = r.data.role;
+      currentStaffRole = role;
+      staffRoleBar.textContent =
+        role === 'admin' ? '내 역할: 관리자 (팀원 등록 가능)' : '내 역할: 운영자 (예약 목록 조회)';
+      staffRoleBar.classList.remove('hidden');
+
+      if (role === 'admin') {
+        if (navStaffBtn) {
+          navStaffBtn.classList.remove('hidden');
+        }
+        if (navMenuBtn) {
+          navMenuBtn.classList.remove('hidden');
+        }
+        panelInvite.classList.remove('hidden');
+        panelStaffList.classList.remove('hidden');
+        await loadStaffList();
+      } else {
+        if (navMenuBtn) {
+          navMenuBtn.classList.add('hidden');
+        }
+        if (activeNavView === 'menu') {
+          setActiveNavView('reservations');
+        }
+      }
+    }
+
+    async function loadStaffList() {
+      var res = await supabase
+        .from('staff_roles')
+        .select('user_id, role, created_at')
+        .order('created_at', { ascending: false });
+
+      if (res.error || !res.data) {
+        tbodyStaff.innerHTML = '';
+        return;
+      }
+
+      tbodyStaff.innerHTML = res.data
+        .map(function (row) {
+          return (
+            '<tr>' +
+            '<td class="px-4 py-3 sm:px-5 sm:py-4">' +
+            escapeHtml(staffRoleLabel(row.role)) +
+            '</td>' +
+            '<td class="max-w-[200px] break-all px-4 py-3 font-mono text-xs text-red-100/70 sm:px-5 sm:py-4">' +
+            escapeHtml(row.user_id) +
+            '</td>' +
+            '<td class="whitespace-nowrap px-4 py-3 text-red-100/75 sm:px-5 sm:py-4">' +
+            escapeHtml(formatDateTime(row.created_at)) +
+            '</td>' +
+            '</tr>'
+          );
+        })
+        .join('');
+    }
+
+    async function callStaffInvite(email, password, role) {
+      var sessionResult = await supabase.auth.getSession();
+      var session = sessionResult.data.session;
+      if (!session) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      var url = SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/staff-invite';
+      var res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + session.access_token,
+          'Content-Type': 'application/json',
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ email: email, password: password, role: role }),
+      });
+
+      var json = {};
+      try {
+        json = await res.json();
+      } catch (e) {
+        json = {};
+      }
+
+      if (!res.ok) {
+        throw new Error(json.error || '팀원 등록 요청에 실패했습니다. Edge Function 배포 여부를 확인하세요.');
+      }
+
+      return json;
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return '—';
+      try {
+        return new Date(iso).toLocaleString('ko-KR', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        });
+      } catch (e) {
+        return iso;
+      }
+    }
+
+    function formatDateOnly(d) {
+      if (!d) return '—';
+      return d;
+    }
+
+    function escapeHtml(s) {
+      if (s == null || s === '') return '—';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    var RES_STATUS_LABELS = {
+      pending: '대기 중',
+      confirmed: '확정',
+      cancelled: '취소',
+      completed: '완료',
+    };
+
+    function normalizeReservationStatus(row) {
+      var s = row && row.status;
+      if (s === 'pending' || s === 'confirmed' || s === 'cancelled' || s === 'completed') return s;
+      return 'pending';
+    }
+
+    function resetReservationFilterInputs() {
+      if (resFilterStatus) resFilterStatus.value = '';
+      if (resFilterDate) resFilterDate.value = '';
+      if (resFilterSearch) resFilterSearch.value = '';
+    }
+
+    function openResStatusOverlay() {
+      if (!overlayResStatus) return;
+      overlayResStatus.classList.remove('hidden');
+      overlayResStatus.classList.add('flex');
+      overlayResStatus.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeResStatusOverlay() {
+      if (!overlayResStatus) return;
+      overlayResStatus.classList.add('hidden');
+      overlayResStatus.classList.remove('flex');
+      overlayResStatus.setAttribute('aria-hidden', 'true');
+      if (resStatusEditId) resStatusEditId.value = '';
+    }
+
+    function updateReservationStatCards(rows) {
+      var c = { pending: 0, confirmed: 0, cancelled: 0, completed: 0 };
+      (rows || []).forEach(function (r) {
+        var k = normalizeReservationStatus(r);
+        if (c[k] != null) c[k]++;
+      });
+      if (statPending) statPending.textContent = String(c.pending);
+      if (statConfirmed) statConfirmed.textContent = String(c.confirmed);
+      if (statCancelled) statCancelled.textContent = String(c.cancelled);
+      if (statCompleted) statCompleted.textContent = String(c.completed);
+    }
+
+    function getFilteredReservations() {
+      var st = (resFilterStatus && resFilterStatus.value) || '';
+      var dateVal = (resFilterDate && resFilterDate.value) || '';
+      var q = ((resFilterSearch && resFilterSearch.value) || '').trim().toLowerCase().replace(/[\s-]/g, '');
+      return cachedReservations.filter(function (r) {
+        if (st && normalizeReservationStatus(r) !== st) return false;
+        if (dateVal && String(r.preferred_date || '') !== dateVal) return false;
+        if (q) {
+          var name = String(r.name || '')
+            .toLowerCase()
+            .replace(/\s/g, '');
+          var phone = String(r.phone || '').replace(/[\s-]/g, '');
+          if (name.indexOf(q) === -1 && phone.indexOf(q) === -1) return false;
+        }
+        return true;
+      });
+    }
+
+    function formatReservationSlot(preferredDate, mealTime) {
+      if (!preferredDate) return '—';
+      var mt = String(mealTime || '');
+      var t = mt.indexOf('런치') >= 0 ? '12:00' : mt.indexOf('디너') >= 0 ? '18:30' : '';
+      try {
+        var d = new Date(String(preferredDate) + 'T12:00:00');
+        var datePart = d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        return t ? datePart + ' ' + t : datePart;
+      } catch (e) {
+        return String(preferredDate) + (t ? ' ' + t : '');
+      }
+    }
+
+    function reservationStatusBadge(status) {
+      var label = RES_STATUS_LABELS[status] || RES_STATUS_LABELS.pending;
+      var cls =
+        status === 'pending'
+          ? 'bg-amber-500/15 text-amber-200/90'
+          : status === 'confirmed'
+            ? 'bg-emerald-500/12 text-emerald-200/85'
+            : status === 'cancelled'
+              ? 'bg-red-500/12 text-red-200/85'
+              : 'bg-sky-500/12 text-sky-200/85';
+      return (
+        '<span class="inline-flex whitespace-nowrap rounded-sm px-2 py-0.5 text-xs font-medium ' +
+        cls +
+        '">' +
+        escapeHtml(label) +
+        '</span>'
+      );
+    }
+
+    function reservationRowNumberForId(id) {
+      for (var i = 0; i < cachedReservations.length; i++) {
+        if (cachedReservations[i].id === id) return i + 1;
+      }
+      return '—';
+    }
+
+    function renderReservationTable(filtered) {
+      var total = cachedReservations.length;
+      var n = filtered.length;
+      if (listSummary) {
+        if (total === 0) listSummary.textContent = '총 0건의 예약';
+        else if (n === total) listSummary.textContent = '총 ' + n + '건의 예약';
+        else listSummary.textContent = '총 ' + n + '건 표시 (전체 ' + total + '건)';
+      }
+      if (n === 0) {
+        tbody.innerHTML = '';
+        if (total === 0) {
+          listEmpty.textContent = '아직 접수된 예약이 없습니다.';
+        } else {
+          listEmpty.textContent = '필터 조건에 맞는 예약이 없습니다.';
+        }
+        listEmpty.classList.remove('hidden');
+        return;
+      }
+      listEmpty.classList.add('hidden');
+      var canManage = currentStaffRole === 'admin' || currentStaffRole === 'operator';
+      tbody.innerHTML = filtered
+        .map(function (r) {
+          var st = normalizeReservationStatus(r);
+          var num = reservationRowNumberForId(r.id);
+          var manageCell = canManage
+            ? '<button type="button" class="btn-res-change-status text-sm font-medium text-red-300/90 underline decoration-red-300/50 underline-offset-2 transition hover:text-red-200" data-id="' +
+              escMenuAttr(String(r.id)) +
+              '">상태변경</button>'
+            : '<span class="text-red-100/40">—</span>';
+          var course =
+            r.meal_time && String(r.meal_time).trim()
+              ? escMenuHtml(String(r.meal_time)) + '<span class="text-red-100/50"> 오마카세</span>'
+              : '<span class="text-red-100/45">—</span>';
+          var guestsPart =
+            r.guests != null && String(r.guests).trim() !== ''
+              ? escMenuHtml(String(r.guests)) + '명'
+              : '<span class="text-red-100/45">—</span>';
+          return (
+            '<tr class="align-top">' +
+            '<td class="whitespace-nowrap px-4 py-3 font-medium text-red-50 sm:px-5 sm:py-4">#' +
+            num +
+            '</td>' +
+            '<td class="px-4 py-3 sm:px-5 sm:py-4">' +
+            '<div class="font-medium text-red-50">' +
+            escMenuHtml(String(r.name || '')) +
+            '</div>' +
+            '<div class="mt-0.5 text-sm text-red-100/70">' +
+            escMenuHtml(String(r.phone || '')) +
+            '</div>' +
+            '</td>' +
+            '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+            escMenuHtml(formatReservationSlot(r.preferred_date, r.meal_time)) +
+            '</td>' +
+            '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+            guestsPart +
+            '<span class="text-red-100/45"> · </span>' +
+            course +
+            '</td>' +
+            '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+            reservationStatusBadge(st) +
+            '</td>' +
+            '<td class="max-w-[200px] px-4 py-3 text-red-100/72 sm:px-5 sm:py-4">' +
+            (r.note == null || String(r.note).trim() === ''
+              ? '<span class="text-red-100/45">—</span>'
+              : escMenuHtml(String(r.note))) +
+            '</td>' +
+            '<td class="whitespace-nowrap px-4 py-3 sm:px-5 sm:py-4">' +
+            manageCell +
+            '</td>' +
+            '</tr>'
+          );
+        })
+        .join('');
+    }
+
+    function applyReservationFiltersAndRender() {
+      renderReservationTable(getFilteredReservations());
+    }
+
+    function resetReservationDashboard() {
+      cachedReservations = [];
+      tbody.innerHTML = '';
+      listEmpty.classList.add('hidden');
+      listEmpty.textContent = '아직 접수된 예약이 없습니다.';
+      if (listSummary) listSummary.textContent = '';
+      updateReservationStatCards([]);
+      resetReservationFilterInputs();
+      closeResStatusOverlay();
+    }
+
+    function openResStatusModalForId(id) {
+      var row;
+      for (var i = 0; i < cachedReservations.length; i++) {
+        if (cachedReservations[i].id === id) {
+          row = cachedReservations[i];
+          break;
+        }
+      }
+      if (!row || !resStatusEditId || !resStatusSelect) return;
+      resStatusEditId.value = id;
+      resStatusSelect.value = normalizeReservationStatus(row);
+      openResStatusOverlay();
+    }
+
+    async function saveReservationStatus() {
+      var id = (resStatusEditId && resStatusEditId.value) || '';
+      var st = (resStatusSelect && resStatusSelect.value) || 'pending';
+      if (!id) return;
+      hideListMsg();
+      var result = await supabase.from('reservation_requests').update({ status: st }).eq('id', id);
+      if (result.error) {
+        showListMsg(
+          result.error.message ||
+            '상태 변경에 실패했습니다. staff_roles·UPDATE RLS(supabase-setup.sql)을 확인해 주세요.'
+        );
+        return;
+      }
+      closeResStatusOverlay();
+      await loadReservations();
+    }
+
+    function setLoggedInUi(on) {
+      if (on) {
+        layoutLogin.classList.add('hidden');
+        layoutDashboard.classList.remove('hidden');
+        btnLogout.classList.remove('hidden');
+        closeSidebar();
+        setActiveNavView('reservations');
+      } else {
+        layoutLogin.classList.remove('hidden');
+        layoutDashboard.classList.add('hidden');
+        btnLogout.classList.add('hidden');
+        hideCourseMenuEditPanel();
+        resetReservationDashboard();
+        resetStaffUi();
+        closeSidebar();
+      }
+    }
+
+    async function loadReservations() {
+      hideListMsg();
+      listEmpty.classList.add('hidden');
+      var result = await supabase
+        .from('reservation_requests')
+        .select(
+          'id, created_at, name, phone, email, meal_time, preferred_date, guests, note, privacy_agreed, status'
+        )
+        .order('created_at', { ascending: false });
+
+      if (result.error) {
+        showListMsg(
+          result.error.message ||
+            '목록을 불러오지 못했습니다. 로그인·RLS·status 컬럼(supabase-setup.sql)을 확인해 주세요.'
+        );
+        tbody.innerHTML = '';
+        cachedReservations = [];
+        updateReservationStatCards([]);
+        if (listSummary) listSummary.textContent = '';
+        return;
+      }
+
+      cachedReservations = result.data || [];
+      updateReservationStatCards(cachedReservations);
+      applyReservationFiltersAndRender();
+    }
+
+    supabase.auth.onAuthStateChange(function (_event, session) {
+      if (session) {
+        setLoggedInUi(true);
+        loadStaffContext().then(function () {
+          return loadReservations();
+        });
+      } else {
+        setLoggedInUi(false);
+      }
+    });
+
+    var sessionResult = await supabase.auth.getSession();
+    if (sessionResult.data.session) {
+      setLoggedInUi(true);
+      await loadStaffContext();
+      await loadReservations();
+    } else {
+      setLoggedInUi(false);
+    }
+
+    formLogin.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideLoginMsg();
+      var email = document.getElementById('login-email').value.trim();
+      var password = document.getElementById('login-password').value;
+      loginSubmit.disabled = true;
+      var prev = loginSubmit.textContent;
+      loginSubmit.textContent = '확인 중…';
+
+      var signIn = await supabase.auth.signInWithPassword({ email: email, password: password });
+
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = prev;
+
+      if (signIn.error) {
+        showLoginMsg(signIn.error.message || '로그인에 실패했습니다. 이메일·비밀번호와 Auth 설정을 확인해 주세요.');
+        return;
+      }
+    });
+
+    btnLogout.addEventListener('click', async function () {
+      await supabase.auth.signOut();
+    });
+
+    if (btnSidebarOpen) {
+      btnSidebarOpen.addEventListener('click', function () {
+        openSidebar();
+      });
+    }
+    if (btnSidebarClose) {
+      btnSidebarClose.addEventListener('click', function () {
+        closeSidebar();
+      });
+    }
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', function () {
+        closeSidebar();
+      });
+    }
+
+    var mqDashboardWide = window.matchMedia('(min-width: 1024px)');
+    mqDashboardWide.addEventListener('change', function (e) {
+      if (e.matches) {
+        document.body.classList.remove('admin-drawer-open');
+        if (sidebarOverlay) {
+          sidebarOverlay.classList.add('hidden');
+        }
+        if (btnSidebarOpen) {
+          btnSidebarOpen.setAttribute('aria-expanded', 'false');
+        }
+        if (adminSidebar) {
+          adminSidebar.classList.remove('-translate-x-full');
+        }
+      } else if (adminSidebar) {
+        adminSidebar.classList.add('-translate-x-full');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (overlayCourseMenuEdit && !overlayCourseMenuEdit.classList.contains('hidden')) {
+        hideCourseMenuEditPanel();
+        hideCourseMenuAdminMsg();
+        return;
+      }
+      if (document.body.classList.contains('admin-drawer-open')) {
+        closeSidebar();
+      }
+    });
+    document.querySelectorAll('.admin-nav-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var v = btn.getAttribute('data-view');
+        if (v) {
+          setActiveNavView(v);
+          closeSidebar();
+        }
+      });
+    });
+
+    btnRefresh.addEventListener('click', function () {
+      if (activeNavView === 'menu') {
+        loadCourseMenuAdmin();
+      } else {
+        loadStaffContext().then(function () {
+          return loadReservations();
+        });
+      }
+    });
+
+    if (btnResFilterApply) {
+      btnResFilterApply.addEventListener('click', function () {
+        applyReservationFiltersAndRender();
+      });
+    }
+
+    if (tbody) {
+      tbody.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-res-change-status');
+        if (!btn) return;
+        var id = btn.getAttribute('data-id');
+        if (id) openResStatusModalForId(id);
+      });
+    }
+
+    if (overlayResStatus) {
+      overlayResStatus.addEventListener('click', function (e) {
+        if (e.target === overlayResStatus) closeResStatusOverlay();
+      });
+    }
+
+    if (resStatusCancel) {
+      resStatusCancel.addEventListener('click', function () {
+        closeResStatusOverlay();
+      });
+    }
+
+    if (resStatusSave) {
+      resStatusSave.addEventListener('click', function () {
+        saveReservationStatus();
+      });
+    }
+
+    if (btnRefreshMenu) {
+      btnRefreshMenu.addEventListener('click', function () {
+        loadCourseMenuAdmin();
+      });
+    }
+
+    if (btnMenuAdd) {
+      btnMenuAdd.addEventListener('click', async function () {
+        await loadCourseMenuAdmin();
+        openCourseMenuEditNew();
+        hideCourseMenuAdminMsg();
+      });
+    }
+
+    if (formCourseMenuEdit) {
+      formCourseMenuEdit.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        await submitCourseMenuForm();
+      });
+    }
+
+    if (btnMenuEditCancel) {
+      btnMenuEditCancel.addEventListener('click', function () {
+        hideCourseMenuEditPanel();
+        hideCourseMenuAdminMsg();
+      });
+    }
+
+    if (menuEditImageFile) {
+      menuEditImageFile.addEventListener('change', function () {
+        hideCourseMenuFormMsg();
+        var f = this.files && this.files[0];
+        if (!f) {
+          pendingMenuImageFile = null;
+          syncMenuImageFileUi();
+          return;
+        }
+        if (!/^image\//.test(f.type || '')) {
+          showCourseMenuFormMsg('이미지 파일만 선택할 수 있습니다.', false);
+          this.value = '';
+          pendingMenuImageFile = null;
+          syncMenuImageFileUi();
+          return;
+        }
+        if (f.size > MENU_IMAGE_MAX_BYTES) {
+          showCourseMenuFormMsg('이미지 파일은 5MB 이하여야 합니다.', false);
+          this.value = '';
+          pendingMenuImageFile = null;
+          syncMenuImageFileUi();
+          return;
+        }
+        pendingMenuImageFile = f;
+        syncMenuImageFileUi();
+      });
+    }
+
+    if (btnMenuImageFileClear) {
+      btnMenuImageFileClear.addEventListener('click', function () {
+        hideCourseMenuFormMsg();
+        clearPendingMenuImageFile();
+      });
+    }
+
+    if (btnCourseMenuModalClose) {
+      btnCourseMenuModalClose.addEventListener('click', function () {
+        hideCourseMenuEditPanel();
+        hideCourseMenuAdminMsg();
+      });
+    }
+
+    if (overlayCourseMenuEdit) {
+      overlayCourseMenuEdit.addEventListener('click', function (e) {
+        if (e.target === overlayCourseMenuEdit) {
+          hideCourseMenuEditPanel();
+          hideCourseMenuAdminMsg();
+        }
+      });
+    }
+
+    if (courseMenuAdminTbody) {
+      courseMenuAdminTbody.addEventListener('click', async function (e) {
+        var tr = e.target.closest('tr[data-menu-id]');
+        if (!tr) return;
+        var id = tr.getAttribute('data-menu-id');
+        if (e.target.closest('.btn-menu-row-edit')) {
+          var row = cachedCourseMenuItems.find(function (r) {
+            return String(r.id) === id;
+          });
+          if (row) {
+            openCourseMenuEditExisting(row);
+          }
+        } else if (e.target.closest('.btn-menu-row-delete')) {
+          await deleteCourseMenuById(id);
+        }
+      });
+    }
+
+    formInvite.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideInviteMsg();
+
+      var email = document.getElementById('invite-email').value.trim();
+      var password = document.getElementById('invite-password').value;
+      var role = document.getElementById('invite-role').value;
+
+      inviteSubmit.disabled = true;
+      var prevLabel = inviteSubmit.textContent;
+      inviteSubmit.textContent = '처리 중…';
+
+      try {
+        await callStaffInvite(email, password, role);
+        showInviteMsg('등록되었습니다. 새 계정으로 로그인할 수 있습니다. 필요 시 비밀번호를 안내해 주세요.', true);
+        document.getElementById('invite-email').value = '';
+        document.getElementById('invite-password').value = '';
+        await loadStaffList();
+      } catch (err) {
+        showInviteMsg(err.message || '등록에 실패했습니다.', false);
+      }
+
+      inviteSubmit.disabled = false;
+      inviteSubmit.textContent = prevLabel;
+    });
+  </script>
+</body>
+</html>

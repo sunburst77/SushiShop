@@ -1,0 +1,9 @@
+# Supabase CLI 캐시 (로컬 전용)
+supabase/.temp/
+
+# 환경·비밀 (절대 커밋 금지)
+.env
+.env.*
+!.env.example
+*.pem
+**/credentials.json

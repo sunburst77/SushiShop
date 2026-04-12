@@ -1,0 +1,2686 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스시 카이덴 — 프리미엄 오마카세</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_180x180.png" />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+  />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hahmlet: ['Hahmlet', 'serif'],
+            moondance: ['Moon Dance', 'cursive'],
+          },
+          colors: {
+            btn: {
+              snow: '#faf5f5',
+              'snow-hover': '#f0e6e6',
+              ink: '#221919',
+              'ink-hover': '#171010',
+              mist: '#fff5f5',
+            },
+            'banner-tint': '#f3e8ea',
+            /* 다크 톤 섹션용 — 레드기 도는 차콜 */
+            surface: {
+              base: '#171314',
+              lift: '#1f1b1c',
+              panel: '#2a2526',
+              veil: '#363032',
+              void: '#0f0d0e',
+            },
+            warm: {
+              50: '#faf7f7',
+              100: '#f0eaea',
+              200: '#e0d8d8',
+              300: '#c9bebe',
+              400: '#a89e9e',
+              500: '#8a8181',
+              600: '#6f6868',
+              700: '#5a5454',
+              800: '#4a4545',
+              900: '#3e3a3a',
+              950: '#252323',
+            },
+          },
+          /* 레이아웃 컬럼: 기본 5xl(1024px) → 1440px */
+          maxWidth: {
+            '5xl': '1440px',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=Moon+Dance&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Hahmlet', serif;
+      letter-spacing: -0.03em;
+    }
+    i[class*='ph'] {
+      letter-spacing: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+    .fade-up-d1 { animation-delay: 0.1s; }
+    .fade-up-d2 { animation-delay: 0.25s; }
+    .fade-up-d3 { animation-delay: 0.4s; }
+    .fade-up-d4 { animation-delay: 0.55s; }
+    .fade-up-d5 { animation-delay: 0.7s; }
+    /* 히어로 첫 화면: 상단바 → 타이틀 2줄 → 본문 → 버튼 2개 → 배경 (순차) */
+    @keyframes heroIntroFromBelow {
+      from {
+        opacity: 0;
+        transform: translateY(1rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes heroIntroFromAbove {
+      from {
+        opacity: 0;
+        transform: translateY(-0.65rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes heroIntroBgFade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    .hero-intro-seq {
+      opacity: 0;
+      animation: heroIntroFromBelow 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    #site-nav.hero-intro-seq {
+      animation-name: heroIntroFromAbove;
+    }
+    .hero-intro-seq.hero-intro-bg {
+      animation-name: heroIntroBgFade;
+      animation-duration: 0.8s;
+      animation-timing-function: ease-out;
+      animation-delay: 0.48s;
+    }
+    .hero-d0 {
+      animation-delay: 0s;
+    }
+    .hero-d1 {
+      animation-delay: 0.08s;
+    }
+    .hero-d2 {
+      animation-delay: 0.16s;
+    }
+    .hero-d3 {
+      animation-delay: 0.24s;
+    }
+    .hero-d4 {
+      animation-delay: 0.32s;
+    }
+    .hero-d5 {
+      animation-delay: 0.4s;
+    }
+    /* 히어로 슬라이드: 활성 .hero-slide-stack에 --play → 배경·글자 순차 등장(JS로 전환마다 재트리거) */
+    .hero-slide-stack [data-hero-stagger] {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    .hero-slide-stack [data-hero-stagger='bg'] {
+      transform: none;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger] {
+      animation: heroIntroFromBelow 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='bg'] {
+      animation-name: heroIntroBgFade;
+      animation-duration: 0.8s;
+      animation-timing-function: ease-out;
+      animation-delay: 0.48s;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='1'] {
+      animation-delay: 0.08s;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='2'] {
+      animation-delay: 0.16s;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='3'] {
+      animation-delay: 0.24s;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='4'] {
+      animation-delay: 0.32s;
+    }
+    .hero-slide-stack.hero-slide-stack--play [data-hero-stagger='5'] {
+      animation-delay: 0.4s;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-intro-seq {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+      .hero-slide-stack [data-hero-stagger] {
+        opacity: 1;
+        transform: none;
+        animation: none !important;
+      }
+    }
+    /* 스크롤 진입 시 등장 — data-reveal + .reveal-visible (JS IntersectionObserver) */
+    [data-reveal] {
+      opacity: 0;
+      transition: opacity 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    [data-reveal]:not(.course-menu-card) {
+      transform: translate3d(0, 1.1rem, 0);
+    }
+    [data-reveal].reveal-visible {
+      opacity: 1;
+    }
+    [data-reveal].reveal-visible:not(.course-menu-card) {
+      transform: translate3d(0, 0, 0);
+    }
+    [data-reveal][data-reveal-delay='0'] {
+      transition-delay: 0s;
+    }
+    [data-reveal][data-reveal-delay='1'] {
+      transition-delay: 0.07s;
+    }
+    [data-reveal][data-reveal-delay='2'] {
+      transition-delay: 0.14s;
+    }
+    [data-reveal][data-reveal-delay='3'] {
+      transition-delay: 0.21s;
+    }
+    [data-reveal][data-reveal-delay='4'] {
+      transition-delay: 0.28s;
+    }
+    [data-reveal][data-reveal-delay='5'] {
+      transition-delay: 0.35s;
+    }
+    [data-reveal][data-reveal-delay='6'] {
+      transition-delay: 0.42s;
+    }
+    [data-reveal][data-reveal-delay='7'] {
+      transition-delay: 0.49s;
+    }
+    [data-reveal][data-reveal-delay='8'] {
+      transition-delay: 0.56s;
+    }
+    [data-reveal][data-reveal-delay='9'] {
+      transition-delay: 0.63s;
+    }
+    [data-reveal][data-reveal-delay='10'] {
+      transition-delay: 0.7s;
+    }
+    [data-reveal][data-reveal-delay='11'] {
+      transition-delay: 0.77s;
+    }
+    [data-reveal][data-reveal-delay='12'] {
+      transition-delay: 0.84s;
+    }
+    [data-reveal].reveal-from-left {
+      transform: translate3d(-1.25rem, 0, 0);
+    }
+    [data-reveal].reveal-from-left.reveal-visible {
+      transform: translate3d(0, 0, 0);
+    }
+    [data-reveal].reveal-from-right {
+      transform: translate3d(1.25rem, 0, 0);
+    }
+    [data-reveal].reveal-from-right.reveal-visible {
+      transform: translate3d(0, 0, 0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+    /* 스크롤 스태거 그룹 안의 카드 — 부모 data-reveal-stagger + JS로 순차 .reveal-visible */
+    [data-reveal-stagger-child] {
+      opacity: 0;
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    [data-reveal-stagger-child]:not(.course-menu-card) {
+      transform: translate3d(0, 0.9rem, 0);
+    }
+    [data-reveal-stagger-child].reveal-visible {
+      opacity: 1;
+    }
+    [data-reveal-stagger-child].reveal-visible:not(.course-menu-card) {
+      transform: translate3d(0, 0, 0);
+    }
+    /* 코스 메뉴 카드만: 스크롤 등장을 더 길고 부드럽게 (깜빡임 완화) — 호버 transition 유지 */
+    #course-menu-grid .course-menu-card[data-reveal-stagger-child] {
+      transition: opacity 1.15s ease-out, transform 0.45s ease, background-color 0.45s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal-stagger-child] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      #course-menu-grid .course-menu-card[data-reveal-stagger-child] {
+        transition: none;
+      }
+    }
+    /* 히어로: 섹션 호버 시 배경 살짝 확대 */
+    #hero .hero-bg-zoom {
+      transform: scale(1.05);
+      transition: transform 1.2s ease-out;
+    }
+    #hero:hover .hero-bg-zoom {
+      transform: scale(1.09);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #hero .hero-bg-zoom {
+        transition: none;
+      }
+      #hero:hover .hero-bg-zoom {
+        transform: scale(1.05);
+      }
+    }
+    @media (max-width: 639px) {
+      #hero .hero-bg-zoom {
+        object-position: right center;
+        transform: scale(0.88);
+        transform-origin: right center;
+      }
+      #hero:hover .hero-bg-zoom {
+        transform: scale(0.93);
+      }
+    }
+    @media (max-width: 639px) and (prefers-reduced-motion: reduce) {
+      #hero:hover .hero-bg-zoom {
+        transform: scale(0.88);
+      }
+    }
+    /* 히어로: 화면에 고정, 본문은 스크롤 시 위로 덮음 */
+    #hero {
+      height: 100vh;
+      height: 100dvh;
+    }
+    /* 히어로 Swiper: 고정 뷰포트 높이에 맞춤 + 페이드 */
+    .hero-swiper,
+    .hero-swiper .swiper-wrapper {
+      height: 100%;
+      min-height: 0;
+    }
+    .hero-swiper .swiper-slide {
+      height: 100%;
+      min-height: 0;
+      box-sizing: border-box;
+    }
+    .hero-swiper .swiper-slide > .hero-slide-stack {
+      min-height: 100%;
+      height: 100%;
+    }
+    .hero-scroll-spacer {
+      height: 100dvh;
+      min-height: 100vh;
+    }
+    /* 히어로: 진행 바 + 일시정지 + 이전/다음 (도트 대체) */
+    .hero-swiper-controls {
+      pointer-events: auto;
+      z-index: 12;
+    }
+    .hero-swiper-progress-track {
+      height: 2px;
+      width: 100%;
+      max-width: 13rem;
+      background: rgb(250 245 245 / 0.22);
+    }
+    @media (min-width: 640px) {
+      .hero-swiper-progress-track {
+        max-width: 16rem;
+      }
+    }
+    .hero-swiper-progress-fill {
+      height: 100%;
+      width: 100%;
+      transform-origin: left center;
+      transform: scaleX(0);
+      background: rgb(250 245 245 / 0.92);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-swiper-progress-fill {
+        transition: none;
+      }
+    }
+    .hero-swiper-toggle-play {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem;
+      color: rgb(250 245 245 / 0.88);
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+    .hero-swiper-toggle-play:hover {
+      color: rgb(250 245 245);
+    }
+    .hero-swiper-toggle-play i {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+    .hero-swiper-prev,
+    .hero-swiper-next {
+      display: inline-flex;
+      height: 2.5rem;
+      width: 2.5rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid rgb(250 245 245 / 0.5);
+      background: transparent;
+      color: rgb(250 245 245 / 0.88);
+      transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    }
+    .hero-swiper-prev:hover,
+    .hero-swiper-next:hover {
+      border-color: rgb(250 245 245 / 0.85);
+      color: rgb(250 245 245);
+      background: rgb(250 245 245 / 0.06);
+    }
+    .hero-swiper-prev:focus-visible,
+    .hero-swiper-next:focus-visible,
+    .hero-swiper-toggle-play:focus-visible {
+      outline: 2px solid rgb(254 202 202 / 0.45);
+      outline-offset: 3px;
+    }
+    .hero-swiper-prev i,
+    .hero-swiper-next i {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    #site-nav.is-scrolled {
+      background-color: rgb(23 19 20 / 0.92);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 0 rgb(54 48 50 / 0.65);
+    }
+    /* 모바일 메뉴 열림: 히어로 위에서도 헤더·로고 대비 유지 */
+    #site-nav.mobile-menu-open {
+      background-color: rgb(23 19 20 / 0.94);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 0 rgb(54 48 50 / 0.65);
+    }
+    /* 투명: 밝은 글자 + 링크 밑줄 */
+    #site-nav:not(.is-scrolled) .nav-links a {
+      color: rgb(254 242 242 / 0.88);
+    }
+    #site-nav:not(.is-scrolled) .nav-links a:hover,
+    #site-nav:not(.is-scrolled) .nav-links a:focus-visible {
+      color: rgb(255 255 255);
+    }
+    #site-nav.is-scrolled .nav-links a {
+      color: rgb(254 242 242 / 0.78);
+    }
+    #site-nav.is-scrolled .nav-links a:hover,
+    #site-nav.is-scrolled .nav-links a:focus-visible {
+      color: rgb(255 255 255);
+    }
+    #site-nav:not(.is-scrolled) .nav-cta {
+      background-color: rgb(250 245 245 / 0.92);
+      color: #221919;
+    }
+    #site-nav:not(.is-scrolled) .nav-cta:hover {
+      background-color: rgb(240 230 230 / 0.96);
+      color: #171010;
+    }
+    #site-nav.is-scrolled .nav-cta {
+      background-color: rgb(250 245 245 / 0.94);
+      color: #221919;
+    }
+    #site-nav.is-scrolled .nav-cta:hover {
+      background-color: rgb(240 230 230 / 0.98);
+      color: #171010;
+    }
+    /* 상단 바: 호버 시 아래에서 흰색 라인이 펼쳐짐 */
+    #site-nav .nav-underline {
+      position: relative;
+    }
+    #site-nav .nav-underline::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background-color: rgb(255 255 255);
+      transform: scaleX(0);
+      transform-origin: 50% 100%;
+      transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+    #site-nav .nav-underline:hover::after,
+    #site-nav .nav-underline:focus-visible::after {
+      transform: scaleX(1);
+    }
+    #site-nav .nav-links a {
+      transition: color 0.3s ease;
+    }
+    #site-nav .nav-brand-link {
+      min-width: 0;
+      max-width: 100%;
+      flex-shrink: 1;
+    }
+    /* logo_w.png — 모바일·PC 모두 고정 높이(화면 너비에 따라 크기 변하지 않음) */
+    #site-nav .nav-brand-logo {
+      display: block;
+      height: 60px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+    @media (min-width: 640px) {
+      #site-nav .nav-brand-logo {
+        height: 44px;
+      }
+    }
+    #site-nav .nav-brand-link:focus-visible {
+      outline: 2px solid rgb(254 202 202 / 0.45);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+    #site-nav .nav-cta {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    /* 모바일 햄버거 버튼 — 스크롤 여부와 관계없이 밝은 색 유지(sm에서 숨김) */
+    #site-nav .nav-menu-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem;
+      margin: -0.35rem;
+      background: transparent;
+      color: rgb(255 255 255 / 0.94);
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+    #site-nav.mobile-menu-open .nav-menu-btn {
+      color: rgb(255 255 255);
+    }
+    #site-nav .nav-menu-btn:focus-visible {
+      outline: 2px solid rgb(254 202 202 / 0.45);
+      outline-offset: 3px;
+    }
+    /* PC(sm 이상): #site-nav .nav-menu-btn의 inline-flex가 Tailwind sm:hidden보다 우선해 보이던 문제 제거 */
+    @media (min-width: 640px) {
+      #site-nav .nav-menu-btn {
+        display: none;
+      }
+    }
+    /* 모바일 전체 화면 메뉴 (< sm) */
+    #nav-mobile-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      padding: 5.5rem 1.5rem 2rem;
+      background-color: rgb(23 19 20 / 0.97);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #nav-mobile-panel.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    #nav-mobile-panel nav a:not(.nav-mobile-panel-cta) {
+      display: block;
+      padding: 0.85rem 0;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: rgb(254 242 242 / 0.88);
+      transition: color 0.25s ease;
+    }
+    #nav-mobile-panel nav a:not(.nav-mobile-panel-cta):active,
+    #nav-mobile-panel nav a:not(.nav-mobile-panel-cta):hover {
+      color: rgb(255 255 255);
+    }
+    #nav-mobile-panel .nav-mobile-panel-cta {
+      margin-top: 1.75rem;
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      padding: 0.65rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      background-color: rgb(250 245 245 / 0.94);
+      color: #221919;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    #nav-mobile-panel .nav-mobile-panel-cta:hover {
+      background-color: rgb(240 230 230 / 0.98);
+      color: #171010;
+    }
+    #nav-mobile-panel .nav-mobile-panel-cta:focus-visible {
+      outline: 2px solid rgb(254 202 202 / 0.45);
+      outline-offset: 3px;
+    }
+    @media (min-width: 640px) {
+      #nav-mobile-panel {
+        display: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #nav-mobile-panel {
+        transition: none;
+      }
+    }
+    /* 코스 메뉴 카드: 호버 시 살짝 상승 + 이미지 확대 + 배경 어둡게 */
+    .course-menu-card {
+      transition: transform 0.45s ease, background-color 0.45s ease;
+    }
+    .course-menu-card:hover {
+      transform: translateY(-6px);
+      background-color: rgb(201 190 190); /* warm-300, warm-100 대비 어두운 톤 */
+    }
+    .course-menu-card .course-menu-card-img {
+      transition: transform 0.55s ease;
+      will-change: transform;
+    }
+    .course-menu-card:hover .course-menu-card-img {
+      transform: scale(1.06);
+    }
+    .course-menu-card .course-menu-card-media {
+      transition: background-color 0.45s ease;
+    }
+    .course-menu-card:hover .course-menu-card-media {
+      background-color: rgb(201 190 190);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #site-nav .nav-underline::after {
+        transition: none;
+      }
+      .course-menu-card {
+        transition: background-color 0.4s ease;
+      }
+      .course-menu-card .course-menu-card-img {
+        transition: none;
+      }
+      .course-menu-card .course-menu-card-media {
+        transition: background-color 0.4s ease;
+      }
+      .course-menu-card:hover {
+        transform: none;
+        background-color: rgb(201 190 190);
+      }
+      .course-menu-card:hover .course-menu-card-img {
+        transform: none;
+      }
+    }
+    #space-slider-track {
+      transition: transform 0.45s ease;
+    }
+    /* 코스 안내: 뷰포트 중앙 고정 모달 카드 (native dialog + showModal) */
+    #course-overview-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: min(52rem, calc(100vw - 2rem));
+      width: 100%;
+      max-height: min(92vh, 52rem);
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      box-sizing: border-box;
+      color-scheme: light;
+    }
+    #course-overview-dialog::backdrop {
+      background: rgb(15 13 14 / 0.78);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+    #course-overview-dialog:focus {
+      outline: none;
+    }
+    /* 밝은 패널: 루트 color-scheme: dark와 충돌 시 글자 대비 보장 */
+    #course-overview-modal-panel {
+      max-height: min(88vh, 48rem);
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: rgb(69 10 10);
+      color-scheme: light;
+      box-shadow: 0 24px 64px rgb(0 0 0 / 0.34);
+      -webkit-overflow-scrolling: touch;
+      animation: course-overview-modal-in 0.3s ease-out;
+    }
+    @keyframes course-overview-modal-in {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #course-overview-dialog::backdrop {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+      #course-overview-modal-panel {
+        animation: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #space-slider-track {
+        transition: none;
+      }
+      .space-service-card,
+      .space-service-card-icon,
+      .space-service-card-title,
+      .space-service-card-chevron,
+      .space-service-card-body {
+        transition: none;
+      }
+    }
+    /* 공간·서비스: 슬라이드와 동기 — 접기/펼침 + 카렛(∨↔^) */
+    .space-service-card {
+      cursor: pointer;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      transition: background-color 0.45s ease;
+    }
+    @media (min-width: 640px) {
+      .space-service-card {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+    }
+    /* 디너 오마카세: dinner_bg.png + 원형(radial) 그라데이션(반투명 혼합, 이미지 옅게) */
+    .course-dinner-panel {
+      background-color: #261018;
+      background-image:
+        radial-gradient(
+          circle farthest-corner at 50% 100%,
+          rgba(69, 10, 10, 0.86) 0%,
+          rgba(52, 18, 26, 0.88) 42%,
+          rgba(38, 16, 24, 0.92) 100%
+        ),
+        url('dinner_bg.png');
+      background-size: 100% 100%, 100% auto;
+      background-position: center, center calc(100% + 100px);
+      background-repeat: no-repeat;
+    }
+    /* 제철 오마카세 코스 섹션 배경과 동일 (warm-50) */
+    .space-service-card.is-active {
+      background-color: #faf7f7;
+    }
+    .space-service-card:not(.is-active) {
+      background-color: transparent;
+    }
+    .space-service-card-icon {
+      margin-top: 0.125rem;
+      flex-shrink: 0;
+      line-height: 1;
+      color: rgb(69 10 10 / 0.7);
+      transition: font-size 0.45s ease, transform 0.45s ease;
+    }
+    .space-service-card.is-active .space-service-card-icon {
+      font-size: 1.25rem;
+      transform: translateY(-0.15rem);
+    }
+    .space-service-card:not(.is-active) .space-service-card-icon {
+      font-size: 1.5rem;
+      transform: translateY(0.4rem);
+    }
+    @media (min-width: 640px) {
+      .space-service-card.is-active .space-service-card-icon {
+        font-size: 1.5rem;
+      }
+      .space-service-card:not(.is-active) .space-service-card-icon {
+        font-size: 1.875rem;
+        transform: translateY(0.45rem);
+      }
+    }
+    .space-service-card-title {
+      flex: 1;
+      min-width: 0;
+      font-weight: 500;
+      line-height: 1.35;
+      color: rgb(69 10 10);
+      transition: font-size 0.45s ease, transform 0.45s ease;
+    }
+    .space-service-card.is-active .space-service-card-title {
+      font-size: 1rem;
+      transform: translateY(-0.15rem);
+    }
+    .space-service-card:not(.is-active) .space-service-card-title {
+      font-size: 1.125rem;
+      transform: translateY(0.4rem);
+    }
+    @media (min-width: 640px) {
+      .space-service-card:not(.is-active) .space-service-card-title {
+        font-size: 1.25rem;
+        transform: translateY(0.45rem);
+      }
+    }
+    .space-service-card-chevron {
+      flex-shrink: 0;
+      font-size: 1.35rem;
+      line-height: 1;
+      color: rgb(69 10 10 / 0.5);
+      transition: transform 0.45s ease;
+    }
+    /* 비활성: ∨(^ 반대) / 활성: ^ — ph-caret-down 기준 */
+    .space-service-card:not(.is-active) .space-service-card-chevron {
+      transform: rotate(0deg);
+    }
+    .space-service-card.is-active .space-service-card-chevron {
+      transform: rotate(180deg);
+    }
+    .space-service-card-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.45s ease;
+    }
+    .space-service-card.is-active .space-service-card-body {
+      grid-template-rows: 1fr;
+    }
+    .space-service-card-body-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    /* 예약 폼: select·date 네이티브 UI를 텍스트 필드와 동일 톤으로 */
+    #reserve .res-native-select,
+    #reserve .res-native-date {
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    #reserve .res-native-select {
+      -moz-appearance: none;
+      accent-color: rgb(127 29 29);
+      color-scheme: dark;
+    }
+    #reserve .res-native-select:focus,
+    #reserve .res-native-select:focus-visible {
+      outline: none;
+    }
+    #reserve .res-native-select option,
+    #reserve .res-native-select optgroup {
+      background-color: #2a2526;
+      color: rgb(254 242 242 / 0.92);
+    }
+    #reserve .res-native-select option:hover,
+    #reserve .res-native-select option:focus,
+    #reserve .res-native-select option:active {
+      background-color: rgb(91 33 38 / 0.98);
+      color: rgb(254 242 242);
+    }
+    #reserve .res-native-select option:checked {
+      background-color: rgb(127 29 29);
+      color: rgb(254 242 242);
+    }
+    #reserve .res-native-date {
+      color-scheme: dark;
+      accent-color: rgb(127 29 29);
+    }
+    #reserve .res-native-date:focus,
+    #reserve .res-native-date:focus-visible {
+      outline: none;
+    }
+    #reserve .res-native-date::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.5;
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-surface-base font-hahmlet text-red-100/88">
+
+  <!-- ===================== NAV ===================== -->
+  <nav
+    id="site-nav"
+    class="hero-intro-seq hero-d0 fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 ease-out"
+  >
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-6 px-6 py-5 sm:gap-8 sm:px-8 lg:px-12">
+      <a href="#" class="nav-brand-link flex max-w-full items-center">
+        <img
+          src="logo_w.png"
+          alt="Sushi Kaiden — 스시 카이덴"
+          class="nav-brand-logo"
+          width="1024"
+          height="682"
+          decoding="async"
+        />
+      </a>
+      <div
+        class="nav-links hidden min-w-0 flex-1 justify-center text-sm font-normal text-red-950/80 sm:flex"
+      >
+        <div class="flex items-center gap-9 lg:gap-12">
+          <a
+            href="#course"
+            class="nav-underline pb-1 transition-colors duration-300 hover:text-red-950"
+            >코스</a>
+          <a
+            href="#space"
+            class="nav-underline pb-1 transition-colors duration-300 hover:text-red-950"
+            >공간</a>
+          <a
+            href="#reserve"
+            class="nav-underline pb-1 transition-colors duration-300 hover:text-red-950"
+            >예약</a>
+          <a
+            href="#location"
+            class="nav-underline pb-1 transition-colors duration-300 hover:text-red-950"
+            >오시는 길</a>
+        </div>
+      </div>
+      <div class="flex flex-shrink-0 items-center gap-2 sm:gap-4">
+        <button
+          type="button"
+          id="nav-menu-toggle"
+          class="nav-menu-btn sm:hidden"
+          aria-expanded="false"
+          aria-controls="nav-mobile-panel"
+          aria-label="메뉴 열기"
+        >
+          <i class="nav-menu-icon-open ph ph-list text-2xl leading-none" aria-hidden="true"></i>
+          <i class="nav-menu-icon-close ph ph-x hidden text-2xl leading-none" aria-hidden="true"></i>
+        </button>
+        <a
+          href="#reserve"
+          class="nav-cta nav-underline hidden flex-shrink-0 items-center justify-center px-6 py-2.5 text-xs font-normal sm:inline-flex"
+        >
+          예약하기
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div
+    id="nav-mobile-panel"
+    class="font-hahmlet sm:hidden"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="사이트 메뉴"
+  >
+    <nav class="flex flex-col" aria-label="주요 메뉴">
+      <a href="#course">코스</a>
+      <a href="#space">공간</a>
+      <a href="#reserve">예약</a>
+      <a href="#location">오시는 길</a>
+      <a href="#reserve" class="nav-mobile-panel-cta">예약하기</a>
+    </nav>
+  </div>
+
+  <!-- ===================== 1. HERO (Swiper 페이드 · 3슬라이드) ===================== -->
+  <section
+    id="hero"
+    class="fixed inset-0 z-0 h-[100dvh] min-h-[100dvh] w-full overflow-hidden bg-surface-void"
+    aria-roledescription="carousel"
+    aria-label="히어로 슬라이드"
+  >
+    <div class="swiper hero-swiper h-full min-h-0 w-full">
+      <div class="swiper-wrapper">
+        <!-- 슬라이드 1 -->
+        <div class="swiper-slide">
+          <div class="hero-slide-stack hero-slide-stack--play relative flex h-full min-h-0 flex-col">
+            <div class="pointer-events-none absolute inset-0 overflow-hidden" data-hero-stagger="bg">
+              <img
+                src="ban1.jpeg"
+                alt=""
+                class="hero-bg-zoom h-full w-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.58)_42%,rgba(12,8,9,0.92)_100%)]"
+                aria-hidden="true"
+              ></div>
+            </div>
+            <div class="relative z-[2] flex h-full min-h-0 w-full flex-col justify-center px-6 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+              <div class="mx-auto w-full max-w-5xl">
+                <h1
+                  id="hero-title"
+                  class="flex flex-col gap-2 font-normal leading-tight text-red-50 sm:gap-3 sm:leading-tight lg:leading-tight"
+                >
+                  <span
+                    class="font-moondance text-[1.55rem] font-normal leading-none text-red-100/90 sm:text-[2.25rem] lg:text-[2.75rem]"
+                    data-hero-stagger="1"
+                    >Sushi Kaiden</span>
+                  <span
+                    class="flex flex-col gap-1 text-3xl leading-tight sm:gap-1.5 sm:text-4xl lg:text-5xl"
+                    data-hero-stagger="2"
+                  >
+                    <span class="block">제철을 빚는 한남의</span>
+                    <span class="block">카운터 오마카세</span>
+                  </span>
+                </h1>
+                <p
+                  class="mt-6 max-w-lg text-base leading-relaxed text-red-100/80 sm:mt-7 sm:text-lg lg:max-w-xl"
+                  data-hero-stagger="3"
+                >
+                  제철 식재료만을 고집하는 셰프의 손끝에서 탄생하는 한 점의 예술.
+                  서울 한남동, 카운터석 8석의 조용한 공간에서 특별한 식사를 경험하세요.
+                </p>
+                <div class="hero-cta-row mt-10 flex w-full gap-3 sm:mt-12 sm:flex-wrap sm:gap-4">
+                  <a
+                    href="#reserve"
+                    class="inline-flex min-w-0 flex-1 basis-0 items-center justify-center bg-btn-snow px-3 py-3 text-base font-normal text-btn-ink transition hover:bg-btn-snow-hover sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="4"
+                  >
+                    예약하기
+                  </a>
+                  <button
+                    type="button"
+                    data-course-overview-open
+                    class="inline-flex min-w-0 flex-1 basis-0 cursor-pointer items-center justify-center border border-btn-mist bg-transparent px-3 py-3 text-base font-normal text-red-50 transition hover:bg-red-50/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200/45 sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="5"
+                  >
+                    코스 보기
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 슬라이드 2 -->
+        <div class="swiper-slide">
+          <div class="hero-slide-stack relative flex h-full min-h-0 flex-col">
+            <div class="pointer-events-none absolute inset-0 overflow-hidden" data-hero-stagger="bg">
+              <img
+                src="hero2.png"
+                alt=""
+                class="hero-bg-zoom h-full w-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.58)_42%,rgba(12,8,9,0.92)_100%)]"
+                aria-hidden="true"
+              ></div>
+            </div>
+            <div class="relative z-[2] flex h-full min-h-0 w-full flex-col justify-center px-6 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+              <div class="mx-auto w-full max-w-5xl">
+                <div
+                  class="flex flex-col gap-2 font-normal leading-tight text-red-50 sm:gap-3 sm:leading-tight lg:leading-tight"
+                >
+                  <span
+                    class="font-moondance text-[1.55rem] font-normal leading-none text-red-100/90 sm:text-[2.25rem] lg:text-[2.75rem]"
+                    data-hero-stagger="1"
+                    >Sushi Kaiden</span>
+                  <p
+                    class="flex flex-col gap-1 text-3xl font-medium leading-tight sm:gap-1.5 sm:text-4xl lg:text-5xl"
+                    data-hero-stagger="2"
+                  >
+                    <span class="block">셰프 앞 카운터에서</span>
+                    <span class="block">한 흐름으로 이어지는 오마카세</span>
+                  </p>
+                </div>
+                <p
+                  class="mt-6 max-w-lg text-base leading-relaxed text-red-100/80 sm:mt-7 sm:text-lg lg:max-w-xl"
+                  data-hero-stagger="3"
+                >
+                  니기리와 사시미, 소테와 국물까지 한 자리에서 이어지는 풀 코스.
+                  셰프의 설명과 함께 천천히 즐기는 약 90분의 다이닝을 만나보세요.
+                </p>
+                <div class="hero-cta-row mt-10 flex w-full gap-3 sm:mt-12 sm:flex-wrap sm:gap-4">
+                  <a
+                    href="#reserve"
+                    class="inline-flex min-w-0 flex-1 basis-0 items-center justify-center bg-btn-snow px-3 py-3 text-base font-normal text-btn-ink transition hover:bg-btn-snow-hover sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="4"
+                  >
+                    예약하기
+                  </a>
+                  <button
+                    type="button"
+                    data-course-overview-open
+                    class="inline-flex min-w-0 flex-1 basis-0 cursor-pointer items-center justify-center border border-btn-mist bg-transparent px-3 py-3 text-base font-normal text-red-50 transition hover:bg-red-50/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200/45 sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="5"
+                  >
+                    코스 보기
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 슬라이드 3 -->
+        <div class="swiper-slide">
+          <div class="hero-slide-stack relative flex h-full min-h-0 flex-col">
+            <div class="pointer-events-none absolute inset-0 overflow-hidden" data-hero-stagger="bg">
+              <img
+                src="hero3.png"
+                alt=""
+                class="hero-bg-zoom h-full w-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.58)_42%,rgba(12,8,9,0.92)_100%)]"
+                aria-hidden="true"
+              ></div>
+            </div>
+            <div class="relative z-[2] flex h-full min-h-0 w-full flex-col justify-center px-6 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+              <div class="mx-auto w-full max-w-5xl">
+                <div
+                  class="flex flex-col gap-2 font-normal leading-tight text-red-50 sm:gap-3 sm:leading-tight lg:leading-tight"
+                >
+                  <span
+                    class="font-moondance text-[1.55rem] font-normal leading-none text-red-100/90 sm:text-[2.25rem] lg:text-[2.75rem]"
+                    data-hero-stagger="1"
+                    >Sushi Kaiden</span>
+                  <p
+                    class="flex flex-col gap-1 text-3xl font-medium leading-tight sm:gap-1.5 sm:text-4xl lg:text-5xl"
+                    data-hero-stagger="2"
+                  >
+                    <span class="block">한남동, 스시 카이덴</span>
+                    <span class="block">완전 예약제 · 카운터 8석</span>
+                  </p>
+                </div>
+                <p
+                  class="mt-6 max-w-lg text-base leading-relaxed text-red-100/80 sm:mt-7 sm:text-lg lg:max-w-xl"
+                  data-hero-stagger="3"
+                >
+                  조용하고 친밀한 분위기 속에서 하루 한 팀씩 정성껏 맞이합니다.
+                  기념일·미팅을 위한 페어링 상담도 예약 시 요청하실 수 있습니다.
+                </p>
+                <div class="hero-cta-row mt-10 flex w-full gap-3 sm:mt-12 sm:flex-wrap sm:gap-4">
+                  <a
+                    href="#reserve"
+                    class="inline-flex min-w-0 flex-1 basis-0 items-center justify-center bg-btn-snow px-3 py-3 text-base font-normal text-btn-ink transition hover:bg-btn-snow-hover sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="4"
+                  >
+                    예약하기
+                  </a>
+                  <button
+                    type="button"
+                    data-course-overview-open
+                    class="inline-flex min-w-0 flex-1 basis-0 cursor-pointer items-center justify-center border border-btn-mist bg-transparent px-3 py-3 text-base font-normal text-red-50 transition hover:bg-red-50/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200/45 sm:inline-flex sm:flex-none sm:basis-auto sm:px-6"
+                    data-hero-stagger="5"
+                  >
+                    코스 보기
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="hero-swiper-controls absolute bottom-0 left-0 right-0 px-6 pb-5 sm:px-8 sm:pb-6 lg:px-12"
+        aria-label="히어로 슬라이드 조작"
+      >
+        <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 sm:gap-6">
+          <div class="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
+            <div
+              class="hero-swiper-progress-track min-w-0 shrink"
+              role="progressbar"
+              aria-label="히어로 슬라이드 진행"
+              aria-valuemin="1"
+              aria-valuemax="3"
+              aria-valuenow="1"
+              data-hero-progress-track
+            >
+              <div class="hero-swiper-progress-fill"></div>
+            </div>
+            <button
+              type="button"
+              class="hero-swiper-toggle-play shrink-0"
+              aria-label="슬라이드 자동재생 일시정지"
+              data-hero-autoplay-toggle
+            >
+              <i class="ph-fill ph-pause" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              class="hero-swiper-prev"
+              aria-label="이전 슬라이드"
+            >
+              <i class="ph ph-caret-left" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              class="hero-swiper-next"
+              aria-label="다음 슬라이드"
+            >
+              <i class="ph ph-caret-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- 히어로 높이만큼 스크롤 영역 확보(클릭은 히어로로 통과) -->
+  <div class="hero-scroll-spacer pointer-events-none shrink-0" aria-hidden="true"></div>
+
+  <!-- ===================== 2. 코스 소개 ===================== -->
+  <section id="course" class="relative z-10 bg-warm-50 py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+    <div class="mx-auto max-w-5xl">
+
+      <header class="mb-14 sm:mb-16" data-reveal>
+        <span
+          class="inline-flex items-center gap-2 border-b border-neutral-900 pb-2 text-xs font-semibold uppercase text-neutral-900"
+        >
+          <i class="ph-fill ph-fish text-sm leading-none text-neutral-900" aria-hidden="true"></i>
+          Omakase Course
+        </span>
+        <h2 class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-950 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight">
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-900/80 sm:text-[1.65rem]">Seasonal Omakase</span>
+          <span>제철 오마카세 코스</span>
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-900/75 sm:mt-6 sm:text-base">
+          그날의 가장 좋은 식재료로 구성되는 12가지 코스.
+          매일 아침 시장에서 직접 고른 재료만을 사용합니다.
+          아래 카드는 제철 네타로 완성한 니기리 중심의 한 접시들을 사진으로 보여 드리는 예시입니다.
+        </p>
+      </header>
+
+      <!-- 코스 카드: Supabase course_menu_items (supabase-setup.sql) -->
+      <p id="course-menu-status" class="mb-6 hidden text-sm leading-relaxed text-red-900/70" data-reveal role="status"></p>
+      <div
+        id="course-menu-grid"
+        class="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8"
+        data-reveal-stagger
+        data-reveal-stagger-ms="175"
+      ></div>
+
+      <!-- 코스 가격 안내 -->
+      <div class="course-dinner-panel mt-14 p-8 sm:mt-16 sm:p-12" data-reveal data-reveal-delay="1">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h3 class="flex flex-col gap-1 text-xl font-medium text-red-50 sm:text-2xl">
+              <span class="font-moondance text-base font-normal text-red-200/85 sm:text-lg">Dinner Course</span>
+              디너 오마카세 코스
+            </h3>
+            <p class="mt-4 text-sm leading-relaxed text-red-100/82 sm:text-base">
+              12가지 코스 · 약 90분 소요 · 페어링 가능
+            </p>
+          </div>
+          <div class="flex flex-col items-start gap-1 sm:items-end">
+            <span class="font-moondance text-sm text-red-200/72">per person</span>
+            <span class="text-2xl font-medium text-red-50 sm:text-3xl">₩ 180,000</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===================== 3. 시설 & 서비스 (50/50 + 수직 카드) ===================== -->
+  <section id="space" class="relative z-10 overflow-x-hidden bg-white py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+    <div class="mx-auto max-w-5xl">
+      <div
+        class="grid grid-cols-1 gap-y-8 sm:gap-y-10 lg:grid-cols-2 lg:items-stretch lg:gap-x-12 lg:gap-y-0"
+      >
+      <header
+        class="lg:col-start-2 lg:row-start-1 lg:self-start lg:pb-8 lg:pt-0"
+        data-reveal
+      >
+        <span
+          class="inline-flex items-center gap-2 border-b border-neutral-900 pb-2 text-xs font-semibold uppercase text-neutral-900"
+        >
+          <i class="ph-fill ph-buildings text-sm leading-none text-neutral-900" aria-hidden="true"></i>
+          Space &amp; Service
+        </span>
+        <h2 class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-950 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight">
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-900/80 sm:text-[1.65rem]">An Intimate Setting</span>
+          <span>공간과 서비스</span>
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-900/72 sm:mt-6 sm:text-base">
+          셰프와 가장 가까운 거리에서 요리의 모든 과정을 지켜보며
+          대화를 나눌 수 있는 친밀한 공간입니다.
+        </p>
+      </header>
+
+      <div
+        id="space-slider"
+        class="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:min-h-full"
+        data-reveal
+        data-reveal-delay="1"
+      >
+        <div
+          id="space-slider-viewport"
+          class="relative h-full min-h-[14rem] w-full min-w-0 overflow-hidden lg:absolute lg:inset-0 lg:min-h-full"
+          aria-roledescription="carousel"
+          aria-label="공간과 서비스 이미지 슬라이드"
+        >
+          <div id="space-slider-track" class="flex h-full" style="transform: translateX(0)">
+            <div
+              class="relative h-full min-h-[14rem] shrink-0 lg:min-h-full"
+              data-space-slide
+            >
+              <img
+                src="space1.png"
+                alt="카운터석 — 오마카세 바와 셰프의 작업 공간"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div
+              class="relative h-full min-h-[14rem] shrink-0 lg:min-h-full"
+              data-space-slide
+            >
+              <img
+                src="space2.png"
+                alt="사케 페어링 — 잔에 따르는 페어링 음료"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div
+              class="relative h-full min-h-[14rem] shrink-0 lg:min-h-full"
+              data-space-slide
+            >
+              <img
+                src="space3.png"
+                alt="발렛 파킹 — 매장 도착과 차량 주차 서비스"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div
+              class="relative h-full min-h-[14rem] shrink-0 lg:min-h-full"
+              data-space-slide
+            >
+              <img
+                src="space4.png"
+                alt="기념일 서비스 — 특별한 날을 위한 다이닝 테이블 연출"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div
+              class="relative h-full min-h-[14rem] shrink-0 lg:min-h-full"
+              data-space-slide
+            >
+              <img
+                src="space5.png"
+                alt="알레르기 대응 — 셰프의 세심한 조리와 준비"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            data-space-prev
+            class="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-none bg-black/35 px-1.5 py-1 text-red-50/90 backdrop-blur-sm transition-[background-color,color] duration-200 hover:bg-black/50 hover:text-white sm:px-2 sm:py-1.5"
+            aria-label="이전 이미지"
+          >
+            <i class="ph ph-caret-left text-2xl leading-none sm:text-3xl" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            data-space-next
+            class="absolute right-0 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-none bg-black/35 px-1.5 py-1 text-red-50/90 backdrop-blur-sm transition-[background-color,color] duration-200 hover:bg-black/50 hover:text-white sm:px-2 sm:py-1.5"
+            aria-label="다음 이미지"
+          >
+            <i class="ph ph-caret-right text-2xl leading-none sm:text-3xl" aria-hidden="true"></i>
+          </button>
+          <div
+            class="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-2 sm:bottom-4"
+            role="tablist"
+            aria-label="슬라이드 선택"
+          >
+            <button
+              type="button"
+              data-space-dot="0"
+              class="h-2 w-2 rounded-full bg-red-950/70 transition hover:bg-red-950"
+              aria-label="1번째 이미지"
+              aria-current="true"
+            ></button>
+            <button
+              type="button"
+              data-space-dot="1"
+              class="h-2 w-2 rounded-full bg-red-950/25 transition hover:bg-red-950/50"
+              aria-label="2번째 이미지"
+            ></button>
+            <button
+              type="button"
+              data-space-dot="2"
+              class="h-2 w-2 rounded-full bg-red-950/25 transition hover:bg-red-950/50"
+              aria-label="3번째 이미지"
+            ></button>
+            <button
+              type="button"
+              data-space-dot="3"
+              class="h-2 w-2 rounded-full bg-red-950/25 transition hover:bg-red-950/50"
+              aria-label="4번째 이미지"
+            ></button>
+            <button
+              type="button"
+              data-space-dot="4"
+              class="h-2 w-2 rounded-full bg-red-950/25 transition hover:bg-red-950/50"
+              aria-label="5번째 이미지"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col divide-y divide-warm-200 lg:col-start-2 lg:row-start-2"
+        data-reveal-stagger
+        data-reveal-stagger-ms="95"
+      >
+        <!-- 서비스 아이템: 슬라이드 동기 — 비활성 시 요약 행만, 활성 시 본문 노출 -->
+        <div
+          data-space-card="0"
+          class="space-service-card is-active flex flex-col py-5 sm:py-6"
+          data-reveal-stagger-child
+          aria-expanded="true"
+        >
+          <div class="flex w-full items-center gap-4 sm:gap-5">
+            <i class="ph ph-armchair space-service-card-icon" aria-hidden="true"></i>
+            <h3 class="space-service-card-title">카운터석 8석</h3>
+            <i class="ph ph-caret-down space-service-card-chevron" aria-hidden="true"></i>
+          </div>
+          <div class="space-service-card-body">
+            <div class="space-service-card-body-inner">
+              <p class="mt-1.5 text-sm leading-relaxed text-red-900/65 sm:mt-2">
+                히노키 원목 카운터에서 셰프의 손놀림을 바로 앞에서 감상할 수 있습니다. 프라이빗한 식사를 위한 완전 예약제로 운영됩니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          data-space-card="1"
+          class="space-service-card flex flex-col py-5 sm:py-6"
+          data-reveal-stagger-child
+          aria-expanded="false"
+        >
+          <div class="flex w-full items-center gap-4 sm:gap-5">
+            <i class="ph ph-wine space-service-card-icon" aria-hidden="true"></i>
+            <h3 class="space-service-card-title">사케 페어링</h3>
+            <i class="ph ph-caret-down space-service-card-chevron" aria-hidden="true"></i>
+          </div>
+          <div class="space-service-card-body">
+            <div class="space-service-card-body-inner">
+              <p class="mt-1.5 text-sm leading-relaxed text-red-900/65 sm:mt-2">
+                각 코스에 어울리는 사케를 소믈리에가 직접 큐레이션합니다. 일본 현지 양조장에서 직접 공수한 한정 사케도 준비되어 있습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          data-space-card="2"
+          class="space-service-card flex flex-col py-5 sm:py-6"
+          data-reveal-stagger-child
+          aria-expanded="false"
+        >
+          <div class="flex w-full items-center gap-4 sm:gap-5">
+            <i class="ph ph-car space-service-card-icon" aria-hidden="true"></i>
+            <h3 class="space-service-card-title">발렛 파킹</h3>
+            <i class="ph ph-caret-down space-service-card-chevron" aria-hidden="true"></i>
+          </div>
+          <div class="space-service-card-body">
+            <div class="space-service-card-body-inner">
+              <p class="mt-1.5 text-sm leading-relaxed text-red-900/65 sm:mt-2">
+                건물 도착 시 발렛 파킹 서비스를 무료로 이용하실 수 있습니다. 식사에만 온전히 집중하실 수 있도록 도와드립니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          data-space-card="3"
+          class="space-service-card flex flex-col py-5 sm:py-6"
+          data-reveal-stagger-child
+          aria-expanded="false"
+        >
+          <div class="flex w-full items-center gap-4 sm:gap-5">
+            <i class="ph ph-gift space-service-card-icon" aria-hidden="true"></i>
+            <h3 class="space-service-card-title">기념일 서비스</h3>
+            <i class="ph ph-caret-down space-service-card-chevron" aria-hidden="true"></i>
+          </div>
+          <div class="space-service-card-body">
+            <div class="space-service-card-body-inner">
+              <p class="mt-1.5 text-sm leading-relaxed text-red-900/65 sm:mt-2">
+                생일, 프로포즈 등 특별한 날을 위한 디저트 플레이트와 꽃 장식을 사전 요청하실 수 있습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          data-space-card="4"
+          class="space-service-card flex flex-col py-5 sm:py-6"
+          data-reveal-stagger-child
+          aria-expanded="false"
+        >
+          <div class="flex w-full items-center gap-4 sm:gap-5">
+            <i class="ph ph-shield-check space-service-card-icon" aria-hidden="true"></i>
+            <h3 class="space-service-card-title">알레르기 대응</h3>
+            <i class="ph ph-caret-down space-service-card-chevron" aria-hidden="true"></i>
+          </div>
+          <div class="space-service-card-body">
+            <div class="space-service-card-body-inner">
+              <p class="mt-1.5 text-sm leading-relaxed text-red-900/65 sm:mt-2">
+                예약 시 알레르기 및 식이 제한 사항을 알려주시면 셰프가 대체 메뉴를 별도로 준비합니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== 4. 예약 안내 ===================== -->
+  <!-- 온라인 예약: Supabase reservation_requests 테이블에 저장 (supabase-setup.sql 참고). -->
+  <section id="reserve" class="relative z-10 bg-surface-base py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+    <div class="mx-auto max-w-5xl">
+      <div data-reveal>
+        <span
+          class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
+        >
+          <i class="ph-fill ph-calendar-blank text-sm leading-none text-red-200/70" aria-hidden="true"></i>
+          Reservation
+        </span>
+        <h2 class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight">
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">Reserve Your Seat</span>
+          <span>예약 안내</span>
+        </h2>
+      </div>
+
+      <div class="mt-10 flex flex-col gap-10 sm:gap-12">
+        <div class="flex flex-col gap-8 sm:gap-9" data-reveal data-reveal-delay="1">
+          <div class="text-sm leading-relaxed text-red-100/72 sm:text-base">
+            <p>
+              모든 좌석은 완전 예약제로 운영되며, 최소 3일 전 예약을 권장합니다.
+              당일 예약은 전화로만 가능합니다.
+            </p>
+          </div>
+          <div
+            class="flex w-full flex-col divide-y divide-warm-600/40 text-sm leading-relaxed text-red-100/65 sm:flex-row sm:divide-x sm:divide-y-0 sm:divide-warm-600/40 sm:text-base"
+          >
+            <div class="min-w-0 flex-1 pb-5 sm:pb-0 sm:pr-6 lg:pr-8">
+              <p>
+                <span class="font-medium text-red-100/95">영업시간</span><br />
+                런치 12:00 – 14:30 · 디너 18:00 – 22:00
+              </p>
+            </div>
+            <div class="min-w-0 flex-1 py-5 sm:px-6 sm:py-0 lg:px-8">
+              <p>
+                <span class="font-medium text-red-100/95">휴무일</span><br />
+                매주 일요일, 월요일
+              </p>
+            </div>
+            <div class="min-w-0 flex-1 pt-5 sm:pl-6 sm:pt-0 lg:pl-8">
+              <p>
+                <span class="font-medium text-red-100/95">예약 문의</span><br />
+                02-1234-5678
+              </p>
+            </div>
+          </div>
+          <div>
+            <a
+              href="tel:0212345678"
+              class="inline-flex items-center justify-center bg-warm-800 px-6 py-3 text-sm font-normal text-red-100 transition hover:bg-warm-700"
+            >
+              <i class="ph ph-phone mr-2 text-base leading-none" aria-hidden="true"></i>
+              전화 예약
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-surface-panel p-6 sm:p-8 lg:p-10" data-reveal data-reveal-delay="2">
+          <h3 class="text-lg font-medium text-red-50 sm:text-xl">온라인 예약 신청</h3>
+          <p class="mt-2 text-xs leading-relaxed text-red-100/62 sm:text-sm">
+            아래 양식을 제출하시면 매장으로 예약 요청이 전달됩니다. 영업일 기준 순차 연락드립니다.
+          </p>
+          <p
+            id="res-form-msg"
+            class="mt-4 hidden text-sm leading-relaxed"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <form id="reservation-form" class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2" action="#" method="post">
+            <input type="text" name="website" value="" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <div class="min-w-0">
+              <label for="res-name" class="text-xs font-medium text-red-200/90">성함 <span class="text-red-300/65">*</span></label>
+              <input
+                id="res-name"
+                name="성함"
+                type="text"
+                required
+                autocomplete="name"
+                class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                placeholder="홍길동"
+              />
+            </div>
+            <div class="min-w-0">
+              <label for="res-phone" class="text-xs font-medium text-red-200/90">연락처 <span class="text-red-300/65">*</span></label>
+              <input
+                id="res-phone"
+                name="연락처"
+                type="tel"
+                required
+                autocomplete="tel"
+                class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                placeholder="010-0000-0000"
+              />
+            </div>
+            <div class="min-w-0">
+              <label for="res-email" class="text-xs font-medium text-red-200/90">이메일</label>
+              <input
+                id="res-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                class="mt-1.5 w-full border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                placeholder="reply@example.com"
+              />
+            </div>
+            <div class="min-w-0">
+              <label for="res-meal" class="text-xs font-medium text-red-200/90">식사 시간 <span class="text-red-300/65">*</span></label>
+              <div class="relative mt-1.5">
+                <select
+                  id="res-meal"
+                  name="식사_시간"
+                  required
+                  class="res-native-select w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-12 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0 sm:pr-14"
+                >
+                  <option value="">선택</option>
+                  <option value="런치">런치 (12:00 – 14:30)</option>
+                  <option value="디너">디너 (18:00 – 22:00)</option>
+                </select>
+                <i
+                  class="ph ph-caret-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-base leading-none text-warm-500/70 sm:right-4"
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div class="min-w-0">
+              <label for="res-date" class="text-xs font-medium text-red-200/90">희망 일자 <span class="text-red-300/65">*</span></label>
+              <div class="relative mt-1.5">
+                <input
+                  id="res-date"
+                  name="희망일"
+                  type="date"
+                  required
+                  class="res-native-date w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-2 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                />
+              </div>
+            </div>
+            <div class="min-w-0">
+              <label for="res-guests" class="text-xs font-medium text-red-200/90">인원 <span class="text-red-300/65">*</span></label>
+              <div class="relative mt-1.5">
+                <select
+                  id="res-guests"
+                  name="인원"
+                  required
+                  class="res-native-select w-full cursor-pointer border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 pl-0 pr-12 text-sm text-red-100 focus:border-red-300/40 focus:outline-none focus:ring-0 sm:pr-14"
+                >
+                  <option value="">선택</option>
+                  <option value="1">1명</option>
+                  <option value="2">2명</option>
+                  <option value="3">3명</option>
+                  <option value="4">4명</option>
+                  <option value="5">5명</option>
+                  <option value="6">6명</option>
+                  <option value="7">7명</option>
+                  <option value="8">8명</option>
+                </select>
+                <i
+                  class="ph ph-caret-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-base leading-none text-warm-500/70 sm:right-4"
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div class="min-w-0 sm:col-span-2">
+              <label for="res-note" class="text-xs font-medium text-red-200/90">요청 사항</label>
+              <textarea
+                id="res-note"
+                name="요청사항"
+                rows="3"
+                class="mt-1.5 w-full resize-y border-0 border-b border-warm-600/70 bg-surface-base/70 py-2 text-sm text-red-100 placeholder:text-warm-500/65 focus:border-red-300/40 focus:outline-none focus:ring-0"
+                placeholder="알레르기, 기념일 등 전달할 내용을 적어 주세요."
+              ></textarea>
+            </div>
+            <div class="flex items-start gap-3 pt-1 sm:col-span-2">
+              <input
+                id="res-agree"
+                name="개인정보_수집_동의"
+                type="checkbox"
+                value="동의함"
+                required
+                class="mt-0.5 h-4 w-4 shrink-0 border-warm-500 text-red-200 focus:ring-red-300/25"
+              />
+              <label for="res-agree" class="text-xs leading-relaxed text-red-100/62">
+                예약 처리를 위한 개인정보 수집·이용에 동의합니다. <span class="text-red-300/75">*</span>
+              </label>
+            </div>
+            <div class="sm:col-span-2">
+              <button
+                id="res-form-submit"
+                type="submit"
+                class="w-full bg-red-900 px-6 py-3.5 text-sm font-normal text-red-50 transition hover:bg-red-950 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:min-w-[10rem]"
+              >
+                예약 요청 보내기
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== 5. 찾아오시는 길 ===================== -->
+  <section id="location" class="relative z-10 bg-surface-lift py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+    <div class="mx-auto max-w-5xl">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-12">
+        <div class="reveal-from-left min-w-0" data-reveal>
+          <span
+            class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
+          >
+            <i class="ph-fill ph-map-pin text-sm leading-none text-red-200/70" aria-hidden="true"></i>
+            Location
+          </span>
+          <h2 class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight">
+            <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">How to Visit</span>
+            <span>찾아오시는 길</span>
+          </h2>
+          <div
+            class="mt-8 flex flex-col divide-y divide-warm-700/35 text-sm leading-relaxed text-warm-500/88 sm:text-base"
+          >
+            <div class="pb-6">
+              <p>
+                <span class="font-medium text-warm-400/95">주소</span><br />
+                서울특별시 용산구 한남대로 42길 18, 2층
+              </p>
+            </div>
+            <div class="py-6">
+              <p>
+                <span class="font-medium text-warm-400/95">지하철</span><br />
+                6호선 한강진역 3번 출구 도보 5분
+              </p>
+            </div>
+            <div class="py-6">
+              <p>
+                <span class="font-medium text-warm-400/95">주차</span><br />
+                건물 내 지하 주차장 이용 가능 (발렛 무료)
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- 지도: lg에서 타이틀 행 상단부터 같은 높이로 채움 -->
+        <div
+          class="reveal-from-right relative flex min-h-[14rem] w-full items-center justify-center overflow-hidden lg:min-h-0 lg:h-full"
+          data-reveal
+          data-reveal-delay="1"
+        >
+          <img
+            src="map5.png"
+            alt="스시 카이덴 오시는 길 지도"
+            class="h-full w-full object-contain object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== 6. 영상 (푸터 위) ===================== -->
+  <section
+    id="film"
+    class="relative z-10 bg-surface-base py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
+    aria-labelledby="film-section-title"
+  >
+    <div class="mx-auto max-w-5xl">
+      <div class="mb-10 sm:mb-12" data-reveal>
+        <span
+          class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
+        >
+          <i class="ph-fill ph-play-circle text-sm leading-none text-red-200/70" aria-hidden="true"></i>
+          Film
+        </span>
+        <h2
+          id="film-section-title"
+          class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight"
+        >
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">A Moment at the Counter</span>
+          <span>카운터의 한 순간</span>
+        </h2>
+        <p class="mt-5 max-w-2xl text-sm leading-relaxed text-red-100/62 sm:mt-6 sm:text-base">
+          약 20초 안팎의 짧은 영상으로 매장의 분위기와 카운터의 장면을 미리 만나 보세요.
+        </p>
+      </div>
+      <div class="relative overflow-hidden bg-surface-lift" data-reveal data-reveal-delay="1">
+        <video
+          class="aspect-video w-full object-cover"
+          controls
+          playsinline
+          preload="metadata"
+          poster="dinner_bg.png"
+          aria-label="스시 카이덴 매장 분위기 소개 영상"
+        >
+          <source src="kaiden-intro.mp4" type="video/mp4" />
+          이 브라우저는 HTML5 동영상을 지원하지 않습니다.
+        </video>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== 7. 푸터 ===================== -->
+  <footer class="relative z-10 bg-surface-void px-6 py-16 sm:px-8 sm:py-20 lg:px-12">
+    <div class="mx-auto max-w-5xl">
+      <div class="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
+        <div data-reveal>
+          <a href="#" class="flex flex-col items-start">
+            <span class="font-moondance text-lg leading-none text-red-200/70">Sushi Kaiden</span>
+            <span class="mt-1 text-base font-medium text-red-50/90">스시 카이덴</span>
+          </a>
+          <p class="mt-5 max-w-xs text-xs leading-relaxed text-warm-400">
+            제철의 진심을 한 점에 담습니다.
+            완전 예약제 카운터 오마카세.
+          </p>
+        </div>
+        <div class="flex flex-col gap-4 text-xs text-warm-400 sm:items-end sm:text-right" data-reveal data-reveal-delay="1">
+          <p>서울특별시 용산구 한남대로 42길 18, 2층</p>
+          <p>02-1234-5678</p>
+          <div class="flex gap-4 text-base text-warm-500">
+            <a href="#" class="transition hover:text-warm-300" aria-label="Instagram">
+              <i class="ph ph-instagram-logo" aria-hidden="true"></i>
+            </a>
+            <a href="#" class="transition hover:text-warm-300" aria-label="Blog">
+              <i class="ph ph-article" aria-hidden="true"></i>
+            </a>
+            <a href="admin.html" class="transition hover:text-warm-300" aria-label="관리자 페이지">
+              <i class="ph ph-gear" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 border-t border-warm-800 pt-6 text-xs text-warm-600" data-reveal data-reveal-delay="2">
+        <p>© 2026 스시 카이덴. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <dialog
+    id="course-overview-dialog"
+    class="font-hahmlet"
+    aria-labelledby="course-overview-title"
+    aria-modal="true"
+  >
+    <div
+      id="course-overview-modal-panel"
+      class="relative bg-warm-50 px-8 py-10 sm:px-12 sm:py-12 lg:px-14 lg:py-14"
+    >
+      <button
+        type="button"
+        data-course-overview-close
+        class="absolute right-5 top-5 flex h-10 w-10 cursor-pointer items-center justify-center text-red-950/50 transition hover:text-red-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/35 sm:right-6 sm:top-6"
+        aria-label="닫기"
+      >
+        <i class="ph ph-x text-xl leading-none" aria-hidden="true"></i>
+      </button>
+
+      <span
+        class="inline-flex items-center gap-2 border-b border-neutral-800 pb-2 text-xs font-semibold uppercase tracking-wide text-neutral-800"
+      >
+        <i class="ph-fill ph-fish text-sm leading-none text-neutral-800" aria-hidden="true"></i>
+        Course &amp; Price
+      </span>
+      <h2
+        id="course-overview-title"
+        class="mt-6 flex flex-col gap-1.5 pr-10 text-2xl font-medium leading-tight text-red-950 sm:mt-7 sm:gap-2 sm:pr-12 sm:text-3xl sm:leading-tight"
+      >
+        <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-800 sm:text-[1.65rem]">Omakase Overview</span>
+        <span class="text-red-950">코스별 가격 · 구성 안내</span>
+      </h2>
+      <p class="mt-5 max-w-xl text-sm leading-relaxed text-red-950/85 sm:mt-6 sm:text-base">
+        모든 코스는 당일 입고 식재에 따라 소폭 변동될 수 있으며, 알레르기·비선호 재료는 예약 시 말씀해 주시면 최대한 반영합니다.
+      </p>
+
+      <div class="mt-10 space-y-5 sm:mt-12 sm:space-y-6">
+        <section
+          class="course-dinner-panel px-6 py-7 sm:px-8 sm:py-8"
+          aria-labelledby="course-block-dinner"
+        >
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+            <div>
+              <h3
+                id="course-block-dinner"
+                class="flex flex-col gap-1 text-xl font-medium text-red-50 sm:text-2xl"
+              >
+                <span class="font-moondance text-base font-normal text-red-200/85 sm:text-lg">Dinner Omakase</span>
+                디너 오마카세
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-red-100/88 sm:text-base">
+                카운터 중심의 풀 코스. 니기리·사시미 외 소테·구이·국물·디저트까지 셰프가 한 흐름으로 구성합니다.
+              </p>
+            </div>
+            <div class="flex shrink-0 flex-col items-start gap-1 sm:items-end">
+              <span class="font-moondance text-sm text-red-200/78">per person</span>
+              <span class="text-2xl font-medium text-red-50 sm:text-3xl">₩ 180,000</span>
+            </div>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-red-200/80">구성 요약</p>
+          <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-50/95 sm:text-base">
+            <li>· 시즌 전채 1~2품</li>
+            <li>· 제철 사시미 · 니기리 중심 다도</li>
+            <li>· 소테 또는 구이 요리 · 국물</li>
+            <li>· 디저트 · 약 90분 · 사케 페어링 선택 가능</li>
+          </ul>
+        </section>
+
+        <section
+          class="bg-white/90 px-6 py-7 sm:px-8 sm:py-8"
+          aria-labelledby="course-block-lunch"
+        >
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+            <div>
+              <h3
+                id="course-block-lunch"
+                class="flex flex-col gap-1 text-xl font-medium text-red-950 sm:text-2xl"
+              >
+                <span class="font-moondance text-base font-normal text-red-800 sm:text-lg">Lunch Omakase</span>
+                런치 오마카세
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-red-950/88 sm:text-base">
+                낮 시간대에 가볍게 즐기는 단축 코스. 니기리와 사시미 비중을 높여 점심에 맞게 구성합니다.
+              </p>
+            </div>
+            <div class="flex shrink-0 flex-col items-start gap-1 sm:items-end">
+              <span class="font-moondance text-sm text-red-800/90">per person</span>
+              <span class="text-2xl font-medium text-red-950 sm:text-3xl">₩ 120,000</span>
+            </div>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-red-800/80">구성 요약</p>
+          <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-950 sm:text-base">
+            <li>· 가벼운 전채 · 제철 사시미</li>
+            <li>· 니기리 중심 약 8품</li>
+            <li>· 말차 또는 시즌 디저트 · 약 60분</li>
+            <li>· 평일 런치 한정 · 예약 필수</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-4 sm:mt-12">
+        <a
+          href="#course"
+          id="course-overview-goto"
+          class="inline-flex items-center justify-center bg-btn-ink px-6 py-3 text-sm font-normal text-red-50 transition hover:bg-btn-ink-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/35"
+        >
+          코스 사진 보기
+        </a>
+        <button
+          type="button"
+          data-course-overview-close
+          class="inline-flex cursor-pointer items-center justify-center border border-btn-ink bg-transparent px-6 py-3 text-sm font-normal text-btn-ink transition hover:bg-btn-ink/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/35"
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    (function () {
+      var dialog = document.getElementById('course-overview-dialog');
+      var openBtns = document.querySelectorAll('[data-course-overview-open]');
+      if (!dialog || !openBtns.length) return;
+      var closeEls = dialog.querySelectorAll('[data-course-overview-close]');
+      var gotoLink = document.getElementById('course-overview-goto');
+      function closeDialog() {
+        dialog.close();
+      }
+      openBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          dialog.showModal();
+        });
+      });
+      closeEls.forEach(function (el) {
+        el.addEventListener('click', closeDialog);
+      });
+      dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) closeDialog();
+      });
+      if (gotoLink) {
+        gotoLink.addEventListener('click', closeDialog);
+      }
+    })();
+    (function () {
+      var nav = document.getElementById('site-nav');
+      if (!nav) return;
+      var threshold = 12;
+      function syncNavBg() {
+        nav.classList.toggle('is-scrolled', window.scrollY > threshold);
+      }
+      syncNavBg();
+      window.addEventListener('scroll', syncNavBg, { passive: true });
+    })();
+    (function () {
+      var nav = document.getElementById('site-nav');
+      var toggle = document.getElementById('nav-menu-toggle');
+      var panel = document.getElementById('nav-mobile-panel');
+      if (!nav || !toggle || !panel) return;
+      var openIcon = toggle.querySelector('.nav-menu-icon-open');
+      var closeIcon = toggle.querySelector('.nav-menu-icon-close');
+      var mq = window.matchMedia('(min-width: 640px)');
+      var prevFocus = null;
+
+      function setOpen(open) {
+        if (open) prevFocus = document.activeElement;
+        nav.classList.toggle('mobile-menu-open', open);
+        panel.classList.toggle('is-open', open);
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+        if (openIcon) openIcon.classList.toggle('hidden', open);
+        if (closeIcon) closeIcon.classList.toggle('hidden', !open);
+        document.body.style.overflow = open ? 'hidden' : '';
+        if (open) {
+          var first = panel.querySelector('nav a');
+          if (first) window.setTimeout(function () { first.focus(); }, 10);
+        } else if (prevFocus && typeof prevFocus.focus === 'function') {
+          prevFocus.focus();
+        }
+      }
+
+      toggle.addEventListener('click', function () {
+        setOpen(!panel.classList.contains('is-open'));
+      });
+
+      panel.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          setOpen(false);
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
+      });
+
+      function closeIfDesktop() {
+        if (mq.matches && panel.classList.contains('is-open')) setOpen(false);
+      }
+      window.addEventListener('resize', closeIfDesktop);
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', closeIfDesktop);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(closeIfDesktop);
+      }
+    })();
+    (function () {
+      var root = document.getElementById('space-slider');
+      var viewport = document.getElementById('space-slider-viewport');
+      var track = document.getElementById('space-slider-track');
+      if (!root || !viewport || !track) return;
+
+      var slides = track.querySelectorAll('[data-space-slide]');
+      var total = slides.length;
+      if (total < 1) return;
+
+      var index = 0;
+      var dots = root.querySelectorAll('[data-space-dot]');
+      var cards = document.querySelectorAll('[data-space-card]');
+      var prevBtn = root.querySelector('[data-space-prev]');
+      var nextBtn = root.querySelector('[data-space-next]');
+      var timer;
+      var resizeTimer;
+
+      function mod(n, m) {
+        return ((n % m) + m) % m;
+      }
+
+      function layout() {
+        var w = viewport.offsetWidth;
+        if (w <= 0) return;
+        track.style.width = total * w + 'px';
+        slides.forEach(function (slide) {
+          slide.style.width = w + 'px';
+          slide.style.flexShrink = '0';
+        });
+        track.style.transform = 'translateX(-' + index * w + 'px)';
+      }
+
+      function syncDots() {
+        dots.forEach(function (d, idx) {
+          if (idx >= total) return;
+          var on = idx === index;
+          d.setAttribute('aria-current', on ? 'true' : 'false');
+          d.classList.toggle('bg-red-950/70', on);
+          d.classList.toggle('bg-red-950/25', !on);
+        });
+      }
+
+      function syncCards() {
+        cards.forEach(function (el) {
+          var i = parseInt(el.getAttribute('data-space-card'), 10);
+          if (isNaN(i) || i < 0 || i >= total) return;
+          var on = i === index;
+          el.classList.toggle('is-active', on);
+          el.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+      }
+
+      function go(n) {
+        index = mod(n, total);
+        var w = viewport.offsetWidth;
+        if (w > 0) {
+          track.style.transform = 'translateX(-' + index * w + 'px)';
+        }
+        syncDots();
+        syncCards();
+      }
+
+      function startAuto() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+          go(index + 1);
+        }, 5500);
+      }
+
+      function bind() {
+        if (prevBtn) prevBtn.addEventListener('click', function () { go(index - 1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { go(index + 1); });
+        dots.forEach(function (d) {
+          d.addEventListener('click', function () {
+            var i = parseInt(d.getAttribute('data-space-dot'), 10);
+            if (!isNaN(i) && i >= 0 && i < total) go(i);
+          });
+        });
+        cards.forEach(function (card) {
+          var i = parseInt(card.getAttribute('data-space-card'), 10);
+          if (isNaN(i) || i < 0 || i >= total) return;
+          card.setAttribute('tabindex', '0');
+          card.addEventListener('click', function () {
+            go(i);
+          });
+          card.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              go(i);
+            }
+          });
+        });
+        root.addEventListener('mouseenter', function () { clearInterval(timer); });
+        root.addEventListener('mouseleave', startAuto);
+        root.addEventListener('focusin', function () { clearInterval(timer); });
+        root.addEventListener('focusout', function (e) {
+          if (!root.contains(e.relatedTarget)) startAuto();
+        });
+        window.addEventListener('resize', function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function () {
+            layout();
+          }, 80);
+        });
+      }
+
+      function init() {
+        layout();
+        syncDots();
+        syncCards();
+        startAuto();
+        if (window.ResizeObserver) {
+          var ro = new ResizeObserver(function () {
+            layout();
+          });
+          ro.observe(viewport);
+        }
+      }
+
+      bind();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+      requestAnimationFrame(function () {
+        layout();
+        go(index);
+      });
+    })();
+    (function () {
+      var io;
+      var staggerIo;
+      var STAGGER_CHILD = '[data-reveal-stagger-child]';
+
+      function reveal(el) {
+        el.classList.add('reveal-visible');
+      }
+
+      function isReducedMotion() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      }
+
+      function parseStaggerMs(root) {
+        var v = parseInt(root.getAttribute('data-reveal-stagger-ms'), 10);
+        if (isNaN(v) || v < 0) return 100;
+        return v;
+      }
+
+      function rootIsRoughlyInView(root) {
+        var rect = root.getBoundingClientRect();
+        var vh = window.innerHeight || 0;
+        if (vh <= 0) return false;
+        return rect.bottom > vh * 0.05 && rect.top < vh * 0.95;
+      }
+
+      function playStaggerSequence(root) {
+        if (root.getAttribute('data-reveal-stagger-done')) return;
+        var children = root.querySelectorAll(STAGGER_CHILD);
+        if (!children.length) return;
+        root.setAttribute('data-reveal-stagger-done', '1');
+        var stepMs = parseStaggerMs(root);
+        if (isReducedMotion()) {
+          children.forEach(reveal);
+          return;
+        }
+        children.forEach(function (child, i) {
+          window.setTimeout(function () {
+            reveal(child);
+          }, i * stepMs);
+        });
+      }
+
+      function tryPlayStaggerRoot(root) {
+        if (root.getAttribute('data-reveal-stagger-done')) return;
+        if (!rootIsRoughlyInView(root)) return;
+        var children = root.querySelectorAll(STAGGER_CHILD);
+        if (!children.length) return;
+        playStaggerSequence(root);
+        if (staggerIo) staggerIo.unobserve(root);
+      }
+
+      function bindStaggerRoots() {
+        if (isReducedMotion()) {
+          document.querySelectorAll('[data-reveal-stagger]').forEach(function (root) {
+            root.querySelectorAll(STAGGER_CHILD).forEach(reveal);
+            root.setAttribute('data-reveal-stagger-done', '1');
+          });
+          return;
+        }
+        if (!staggerIo) {
+          staggerIo = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                var root = entry.target;
+                var children = root.querySelectorAll(STAGGER_CHILD);
+                if (!children.length) return;
+                playStaggerSequence(root);
+                staggerIo.unobserve(root);
+              });
+            },
+            { root: null, rootMargin: '0px 0px -12% 0px', threshold: 0.04 }
+          );
+        }
+        document.querySelectorAll('[data-reveal-stagger]:not([data-reveal-stagger-done])').forEach(function (root) {
+          staggerIo.observe(root);
+        });
+      }
+
+      function bindReveal() {
+        if (isReducedMotion()) {
+          document.querySelectorAll('[data-reveal]').forEach(reveal);
+          document.querySelectorAll(STAGGER_CHILD).forEach(reveal);
+          document.querySelectorAll('[data-reveal-stagger]').forEach(function (r) {
+            r.setAttribute('data-reveal-stagger-done', '1');
+          });
+          return;
+        }
+        if (!io) {
+          io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                reveal(entry.target);
+                io.unobserve(entry.target);
+              });
+            },
+            { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.06 }
+          );
+        }
+        document.querySelectorAll('[data-reveal]:not(.reveal-visible)').forEach(function (el) {
+          io.observe(el);
+        });
+        bindStaggerRoots();
+        document.querySelectorAll('[data-reveal-stagger]:not([data-reveal-stagger-done])').forEach(tryPlayStaggerRoot);
+      }
+
+      window.initScrollReveal = bindReveal;
+      window.tryScrollRevealStagger = function () {
+        if (isReducedMotion()) return;
+        document.querySelectorAll('[data-reveal-stagger]:not([data-reveal-stagger-done])').forEach(tryPlayStaggerRoot);
+      };
+      window.resetScrollRevealStagger = function (rootEl) {
+        if (!rootEl || !rootEl.hasAttribute('data-reveal-stagger')) return;
+        rootEl.removeAttribute('data-reveal-stagger-done');
+        rootEl.querySelectorAll(STAGGER_CHILD).forEach(function (child) {
+          child.classList.remove('reveal-visible');
+        });
+        if (!isReducedMotion() && staggerIo) staggerIo.observe(rootEl);
+      };
+
+      function boot() {
+        bindReveal();
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+    })();
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    var SUPABASE_URL = 'https://mnzdnsfatcqtmqktihgl.supabase.co';
+    var SUPABASE_ANON_KEY =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uemRuc2ZhdGNxdG1xa3RpaGdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MDM5NDgsImV4cCI6MjA5MTM3OTk0OH0.e1FcCKwdNMHWQKULRczmuEXnZoYISRWziA2yLcYdnP4';
+
+    var form = document.getElementById('reservation-form');
+    var msgEl = document.getElementById('res-form-msg');
+    var submitBtn = document.getElementById('res-form-submit');
+
+    if (form && msgEl && submitBtn) {
+      var supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      function showMsg(text, ok) {
+        msgEl.textContent = text;
+        msgEl.classList.remove('hidden', 'text-red-200/85', 'text-red-300/90');
+        if (ok) {
+          msgEl.classList.add('text-red-200/85');
+        } else {
+          msgEl.classList.add('text-red-300/90');
+        }
+      }
+
+      function hideMsg() {
+        msgEl.textContent = '';
+        msgEl.classList.add('hidden');
+        msgEl.classList.remove('text-red-200/85', 'text-red-300/90');
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        hideMsg();
+
+        var fd = new FormData(form);
+        if (fd.get('website')) {
+          return;
+        }
+
+        var name = (fd.get('성함') || '').toString().trim();
+        var phone = (fd.get('연락처') || '').toString().trim();
+        var emailRaw = (fd.get('email') || '').toString().trim();
+        var mealTime = (fd.get('식사_시간') || '').toString().trim();
+        var preferredDate = (fd.get('희망일') || '').toString().trim();
+        var guestsRaw = (fd.get('인원') || '').toString().trim();
+        var noteRaw = (fd.get('요청사항') || '').toString().trim();
+        var guests = parseInt(guestsRaw, 10);
+        var privacyOk = fd.get('개인정보_수집_동의') === '동의함';
+
+        if (!name || !phone || !mealTime || !preferredDate || !guestsRaw || isNaN(guests) || !privacyOk) {
+          showMsg('필수 항목을 모두 입력하고 개인정보 동의에 체크해 주세요.', false);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        var prevLabel = submitBtn.textContent;
+        submitBtn.textContent = '전송 중…';
+
+        var row = {
+          name: name,
+          phone: phone,
+          email: emailRaw ? emailRaw : null,
+          meal_time: mealTime,
+          preferred_date: preferredDate,
+          guests: guests,
+          note: noteRaw ? noteRaw : null,
+          privacy_agreed: true,
+        };
+
+        var result = await supabase.from('reservation_requests').insert([row]);
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = prevLabel;
+
+        if (result.error) {
+          showMsg('전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.', false);
+          return;
+        }
+
+        showMsg('예약 요청이 접수되었습니다. 영업일 기준으로 순차 연락드리겠습니다.', true);
+        form.reset();
+      });
+    }
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    var SUPABASE_URL = 'https://mnzdnsfatcqtmqktihgl.supabase.co';
+    var SUPABASE_ANON_KEY =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uemRuc2ZhdGNxdG1xa3RpaGdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MDM5NDgsImV4cCI6MjA5MTM3OTk0OH0.e1FcCKwdNMHWQKULRczmuEXnZoYISRWziA2yLcYdnP4';
+
+    var grid = document.getElementById('course-menu-grid');
+    var statusEl = document.getElementById('course-menu-status');
+
+    var FALLBACK_MENU = [
+      {
+        sort_order: 1,
+        title_ko: '연어 니기리',
+        title_en: 'Salmon Nigiri',
+        description:
+          '제철 연어를 두껍게 올린 니기리. 윤이 도는 주황빛 살과 하얀 지방줄, 작은 허브 가니시가 어우러진 한 입입니다.',
+        image_url: 'sushi1.png',
+        image_alt: '연어 니기리 두 관과 생강 초절임',
+      },
+      {
+        sort_order: 2,
+        title_ko: '가쓰오 니기리',
+        title_en: 'Katsuo Nigiri',
+        description:
+          '겉만 은은하게 구워 속은 선명한 붉기를 살린 가다랑어 니기리. 생강을 얹어 잡내를 잡고 향을 돋웁니다.',
+        image_url: 'sushi2.png',
+        image_alt: '겉을 살짝 구운 참다랑어 니기리 두 관',
+      },
+      {
+        sort_order: 3,
+        title_ko: '북방조개 니기리',
+        title_en: 'Hokkigai Nigiri',
+        description:
+          '제철 북방조개(호키가이)를 얹은 니기리. 흰 살에서 붉게 익은 끝까지 달큼한 육즙과 탄력 있는 식감이 살아 있습니다.',
+        image_url: 'sushi3.png',
+        image_alt: '북방조개 호키가이 니기리 두 관',
+      },
+      {
+        sort_order: 4,
+        title_ko: '제철 흰살 니기리',
+        title_en: 'Shiromi Nigiri',
+        description:
+          '그날 들어온 흰살 생선에 껍질을 살린 채 가늘게 칼집을 내고, 골든 소스와 잎 채소로 향을 얹은 니기리입니다.',
+        image_url: 'sushi4.png',
+        image_alt: '껍질을 살린 제철 흰살 니기리 두 관',
+      },
+      {
+        sort_order: 5,
+        title_ko: '적채 니기리',
+        title_en: 'Akami Nigiri',
+        description:
+          '깊은 붉은빛의 참다랑어 적채를 샤리 위에 얹었습니다. 소량의 겨자·허브 가니시와 가벼운 소금으로 풍미를 다듬습니다.',
+        image_url: 'sushi5.png',
+        image_alt: '적채 참다랑어 니기리 두 관',
+      },
+      {
+        sort_order: 6,
+        title_ko: '구이 니기리',
+        title_en: 'Seared Nigiri',
+        description:
+          '표면만 살짝 구워 감칠맛을 살린 셰프 추천 네타. 허브와 와사비로 마무리한 니기리로 코스의 한 장면을 담았습니다.',
+        image_url: 'sushi6.png',
+        image_alt: '표면을 은은하게 구운 셰프 추천 니기리 두 관',
+      },
+    ];
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function resolveImageSrc(url) {
+      if (!url) return '';
+      var t = String(url).trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:/i.test(t)) return t;
+      return t;
+    }
+
+    function formatOrderNum(n) {
+      var x = parseInt(n, 10);
+      if (isNaN(x) || x < 0) return '00';
+      return String(x).padStart(2, '0');
+    }
+
+    function renderCourseArticles(rows) {
+      if (!grid) return;
+      grid.innerHTML = rows
+        .map(function (row) {
+          var src = resolveImageSrc(row.image_url);
+          var num = formatOrderNum(row.sort_order);
+          var en = (row.title_en || '').trim();
+          var enHtml = en
+            ? '<span class="ml-1.5 font-moondance text-base font-normal text-red-900/80">' +
+              escapeHtml(en) +
+              '</span>'
+            : '';
+          return (
+            '<article class="course-menu-card flex h-full min-h-0 flex-col overflow-hidden bg-warm-100" data-reveal-stagger-child>' +
+            '<div class="course-menu-card-media relative aspect-square w-full shrink-0 overflow-hidden bg-warm-100">' +
+            '<img src="' +
+            escapeHtml(src) +
+            '" alt="' +
+            escapeHtml(row.image_alt || '') +
+            '" class="course-menu-card-img absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />' +
+            '</div>' +
+            '<div class="flex min-h-0 flex-1 flex-col justify-start px-6 pb-6 pt-3 sm:px-8 sm:pb-8 sm:pt-4 lg:px-9 lg:pb-9 lg:pt-5">' +
+            '<span class="font-moondance text-[2.5rem] leading-none text-red-800/30 sm:text-[3rem]">' +
+            escapeHtml(num) +
+            '</span>' +
+            '<h3 class="mt-4 text-lg font-medium text-red-950 sm:text-xl">' +
+            escapeHtml(row.title_ko) +
+            enHtml +
+            '</h3>' +
+            '<p class="mt-3 text-sm leading-relaxed text-red-950/70 sm:mt-4">' +
+            escapeHtml(row.description) +
+            '</p>' +
+            '</div>' +
+            '</article>'
+          );
+        })
+        .join('');
+    }
+
+    async function loadCourseMenuPublic() {
+      if (!grid) return;
+
+      var supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      var result = await supabase
+        .from('course_menu_items')
+        .select('sort_order, title_ko, title_en, description, image_url, image_alt')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+
+      var useFallback = result.error || !result.data || result.data.length === 0;
+      var rows = useFallback ? FALLBACK_MENU : result.data;
+
+      if (statusEl) {
+        if (result.error) {
+          statusEl.textContent =
+            '메뉴를 불러오지 못했습니다. 아래는 예시 데이터입니다. Supabase의 course_menu_items 테이블·RLS를 확인해 주세요.';
+          statusEl.classList.remove('hidden');
+          statusEl.classList.remove('reveal-visible');
+          if (typeof window.initScrollReveal === 'function') window.initScrollReveal();
+        } else if (!result.data || result.data.length === 0) {
+          statusEl.textContent = '등록된 메뉴가 없어 예시 데이터를 표시합니다.';
+          statusEl.classList.remove('hidden');
+          statusEl.classList.remove('reveal-visible');
+          if (typeof window.initScrollReveal === 'function') window.initScrollReveal();
+        } else {
+          statusEl.textContent = '';
+          statusEl.classList.add('hidden');
+        }
+      }
+
+      renderCourseArticles(rows);
+      var menuGrid = document.getElementById('course-menu-grid');
+      if (menuGrid && typeof window.resetScrollRevealStagger === 'function') {
+        window.resetScrollRevealStagger(menuGrid);
+      }
+      if (typeof window.tryScrollRevealStagger === 'function') window.tryScrollRevealStagger();
+      if (typeof window.initScrollReveal === 'function') window.initScrollReveal();
+    }
+
+    loadCourseMenuPublic();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    (function () {
+      var el = document.querySelector('.hero-swiper');
+      if (!el || typeof Swiper === 'undefined') return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var autoplayDelay = 6000;
+      var progressTrack = el.querySelector('[data-hero-progress-track]');
+      var progressFill = el.querySelector('.hero-swiper-progress-fill');
+      var toggleBtn = el.querySelector('[data-hero-autoplay-toggle]');
+      var toggleIcon = toggleBtn && toggleBtn.querySelector('i');
+
+      function syncHeroStagger(swiper) {
+        el.querySelectorAll('.hero-slide-stack').forEach(function (stack) {
+          stack.classList.remove('hero-slide-stack--play');
+        });
+        if (reduceMotion) return;
+        var slide = swiper.slides[swiper.activeIndex];
+        var stack = slide && slide.querySelector('.hero-slide-stack');
+        if (!stack) return;
+        void stack.offsetWidth;
+        stack.classList.add('hero-slide-stack--play');
+      }
+
+      function heroSlideCount(swiper) {
+        var nodes = el.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)');
+        if (nodes && nodes.length) return nodes.length;
+        return swiper.slides && swiper.slides.length ? swiper.slides.length : 1;
+      }
+
+      function updateSlideIndexProgress(swiper) {
+        if (!progressFill) return;
+        var total = heroSlideCount(swiper);
+        if (total < 1) total = 1;
+        var idx =
+          typeof swiper.realIndex === 'number' && swiper.realIndex >= 0
+            ? swiper.realIndex
+            : swiper.activeIndex;
+        idx = Math.max(0, Math.min(total - 1, idx));
+        var current = idx + 1;
+        var x = current / total;
+        progressFill.style.transform = 'scaleX(' + x + ')';
+        if (progressTrack) {
+          progressTrack.setAttribute('aria-valuemax', String(total));
+          progressTrack.setAttribute('aria-valuenow', String(current));
+        }
+      }
+
+      function setTogglePlaying(playing) {
+        if (!toggleBtn || !toggleIcon) return;
+        toggleBtn.setAttribute('data-paused', playing ? '0' : '1');
+        toggleBtn.setAttribute(
+          'aria-label',
+          playing ? '슬라이드 자동재생 일시정지' : '슬라이드 자동재생 재생'
+        );
+        toggleIcon.className = playing ? 'ph-fill ph-pause' : 'ph-fill ph-play';
+      }
+
+      var swiper = new Swiper(el, {
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        speed: reduceMotion ? 200 : 900,
+        loop: true,
+        autoplay: reduceMotion
+          ? false
+          : {
+              delay: autoplayDelay,
+              disableOnInteraction: false,
+              waitForTransition: true,
+            },
+        navigation: {
+          nextEl: el.querySelector('.hero-swiper-next'),
+          prevEl: el.querySelector('.hero-swiper-prev'),
+        },
+        on: {
+          init: function (s) {
+            syncHeroStagger(s);
+            requestAnimationFrame(function () {
+              updateSlideIndexProgress(s);
+            });
+            if (!reduceMotion) setTogglePlaying(true);
+          },
+          slideChangeTransitionEnd: function (s) {
+            syncHeroStagger(s);
+            updateSlideIndexProgress(s);
+          },
+        },
+      });
+
+      if (toggleBtn && swiper.autoplay && !reduceMotion) {
+        toggleBtn.addEventListener('click', function () {
+          var paused = toggleBtn.getAttribute('data-paused') === '1';
+          if (paused) {
+            swiper.autoplay.resume();
+            setTogglePlaying(true);
+          } else {
+            swiper.autoplay.pause();
+            setTogglePlaying(false);
+          }
+        });
+      } else if (toggleBtn && reduceMotion) {
+        toggleBtn.setAttribute('hidden', '');
+        toggleBtn.setAttribute('aria-hidden', 'true');
+      }
+    })();
+  </script>
+</body>
+</html>

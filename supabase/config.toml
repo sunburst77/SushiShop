@@ -1,0 +1,5 @@
+# https://supabase.com/docs/guides/cli/config
+# Edge Function: JWT는 함수 코드에서 검증합니다.
+
+[functions.staff-invite]
+verify_jwt = false
