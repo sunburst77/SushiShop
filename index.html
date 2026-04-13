@@ -1812,10 +1812,15 @@
 
 
   <!-- ===================== 6. 찾아오시는 길 ===================== -->
-  <section id="location" class="relative z-10 bg-surface-lift py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+  <section
+    id="location"
+    class="relative z-10 bg-surface-lift py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
+  >
     <div class="mx-auto max-w-5xl">
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-12">
-        <div class="reveal-from-left min-w-0" data-reveal>
+      <div
+        class="grid min-h-0 grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-12"
+      >
+        <div class="reveal-from-left min-w-0 lg:min-h-0" data-reveal>
           <span
             class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
           >
@@ -1849,19 +1854,52 @@
             </div>
           </div>
         </div>
-        <!-- 지도: lg에서 타이틀 행 상단부터 같은 높이로 채움 -->
+        <!-- 지도: lg에서 텍스트 열과 행 높이 맞춤 -->
         <div
-          class="reveal-from-right relative flex min-h-[14rem] w-full items-center justify-center overflow-hidden lg:min-h-0 lg:h-full"
+          class="reveal-from-right flex min-h-[18rem] w-full flex-col self-stretch sm:min-h-[20rem] lg:h-full lg:min-h-0"
           data-reveal
           data-reveal-delay="1"
         >
-          <img
-            src="map5.png"
-            alt="스시 카이덴 오시는 길 지도"
-            class="h-full w-full object-contain object-center"
-            loading="lazy"
-            decoding="async"
-          />
+          <div
+            class="relative min-h-[18rem] w-full flex-1 basis-0 overflow-hidden bg-surface-panel sm:min-h-[22rem] lg:min-h-[28rem] xl:min-h-[32rem]"
+          >
+            <iframe
+              title="스시 카이덴 위치 지도"
+              class="absolute inset-0 block h-full w-full border-0"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=126.9991%2C37.5337%2C127.0036%2C37.5358&amp;layer=mapnik&amp;marker=37.53475%2C127.00135"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+          <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs leading-relaxed text-warm-500/90">
+            <a
+              href="https://www.google.com/maps/search/?api=1&amp;query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%9A%A9%EC%82%B0%EA%B5%AC%20%ED%95%9C%EB%82%A8%EB%8C%80%EB%A1%9C%2042%EA%B8%B8%2018"
+              class="group inline-flex items-center gap-1.5 transition hover:text-warm-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="ph ph-google-logo text-sm leading-none opacity-90 group-hover:opacity-100" aria-hidden="true"></i>
+              Google 지도에서 보기
+            </a>
+            <a
+              href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%9A%A9%EC%82%B0%EA%B5%AC%20%ED%95%9C%EB%82%A8%EB%8C%80%EB%A1%9C%2042%EA%B8%B8%2018"
+              class="group inline-flex items-center gap-1.5 transition hover:text-warm-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="ph ph-map-pin text-sm leading-none opacity-90 group-hover:opacity-100" aria-hidden="true"></i>
+              네이버 지도
+            </a>
+            <a
+              href="https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%9A%A9%EC%82%B0%EA%B5%AC%20%ED%95%9C%EB%82%A8%EB%8C%80%EB%A1%9C%2042%EA%B8%B8%2018"
+              class="group inline-flex items-center gap-1.5 transition hover:text-warm-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="ph ph-map-trifold text-sm leading-none opacity-90 group-hover:opacity-100" aria-hidden="true"></i>
+              카카오맵
+            </a>
+          </div>
         </div>
       </div>
     </div>
