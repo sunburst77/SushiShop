@@ -369,19 +369,32 @@
         transform: scale(1.05);
       }
     }
+    /* 모바일: 축소(scale) 시 여백·void 배경이 드러나므로 데스크톱과 동일 비율로 풀블리드 유지 */
     @media (max-width: 639px) {
       #hero .hero-bg-zoom {
+        object-position: 56% center;
+        transform: scale(1.05);
+        transform-origin: center center;
+      }
+      /* ban1만: 우측 정렬·translate로 잘린 느낌 보완 → scale을 살짝 올려 2·3번과 체감 크기 맞춤 */
+      #hero .hero-swiper .swiper-slide.hero-slide--ban1 .hero-bg-zoom {
         object-position: right center;
-        transform: scale(0.88);
         transform-origin: right center;
+        transform: translate3d(100px, 0, 0) scale(1.08);
       }
       #hero:hover .hero-bg-zoom {
-        transform: scale(0.93);
+        transform: scale(1.09);
+      }
+      #hero:hover .hero-swiper .swiper-slide.hero-slide--ban1 .hero-bg-zoom {
+        transform: translate3d(100px, 0, 0) scale(1.12);
       }
     }
     @media (max-width: 639px) and (prefers-reduced-motion: reduce) {
       #hero:hover .hero-bg-zoom {
-        transform: scale(0.88);
+        transform: scale(1.05);
+      }
+      #hero:hover .hero-swiper .swiper-slide.hero-slide--ban1 .hero-bg-zoom {
+        transform: translate3d(100px, 0, 0) scale(1.08);
       }
     }
     /* 히어로: 화면에 고정, 본문은 스크롤 시 위로 덮음 */
@@ -1022,8 +1035,8 @@
   >
     <div class="swiper hero-swiper h-full min-h-0 w-full">
       <div class="swiper-wrapper">
-        <!-- 슬라이드 1 -->
-        <div class="swiper-slide">
+        <!-- 슬라이드 1 (hero-slide--ban1: Swiper loop 시 DOM 순서와 무관하게 ban1만 모바일 포지션 지정) -->
+        <div class="swiper-slide hero-slide--ban1">
           <div class="hero-slide-stack hero-slide-stack--play relative flex h-full min-h-0 flex-col">
             <div class="pointer-events-none absolute inset-0 overflow-hidden" data-hero-stagger="bg">
               <img
