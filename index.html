@@ -4,6 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>스시 카이덴 — 프리미엄 오마카세</title>
+  <!-- SEO: 실제 서비스 도메인으로 아래 https://example.com 과 이미지 URL을 모두 교체하세요. -->
+  <meta
+    name="description"
+    content="서울 한남동 카운터 오마카세 스시 카이덴. 제철 식재로 구성하는 프리미엄 오마카세, 8석 프라이빗 카운터. 코스 안내·예약·오시는 길을 확인하세요."
+  />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://example.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:site_name" content="스시 카이덴" />
+  <meta property="og:title" content="스시 카이덴 — 프리미엄 오마카세" />
+  <meta
+    property="og:description"
+    content="서울 한남동 카운터 오마카세 스시 카이덴. 제철 식재로 구성하는 프리미엄 오마카세, 8석 프라이빗 카운터."
+  />
+  <meta property="og:url" content="https://example.com/" />
+  <meta property="og:image" content="https://example.com/ban1.jpeg" />
+  <meta property="og:image:alt" content="스시 카이덴 — 한남동 카운터 오마카세" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="스시 카이덴 — 프리미엄 오마카세" />
+  <meta
+    name="twitter:description"
+    content="서울 한남동 카운터 오마카세 스시 카이덴. 제철 식재로 구성하는 프리미엄 오마카세, 8석 프라이빗 카운터."
+  />
+  <meta name="twitter:image" content="https://example.com/ban1.jpeg" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "@id": "https://example.com/#restaurant",
+      "name": "스시 카이덴",
+      "alternateName": "Sushi Kaiden",
+      "description": "서울 한남동 카운터 오마카세. 제철 식재로 구성하는 프리미엄 오마카세 레스토랑.",
+      "url": "https://example.com/",
+      "telephone": "+82-2-1234-5678",
+      "image": ["https://example.com/ban1.jpeg"],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "한남대로 42길 18, 2층",
+        "addressLocality": "용산구",
+        "addressRegion": "서울특별시",
+        "postalCode": "04417",
+        "addressCountry": "KR"
+      },
+      "servesCuisine": ["일식", "오마카세", "스시"],
+      "priceRange": "₩₩₩₩"
+    }
+  </script>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon_32x32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="favicon_180x180.png" />
   <link
@@ -758,6 +806,10 @@
       background-position: center, center calc(100% + 100px);
       background-repeat: no-repeat;
     }
+    /* 코스 모달: 패널 루트 color(rgb(69 10 10)) 상속으로 본문이 어두워지는 경우 대비 */
+    #course-overview-modal-panel .course-dinner-panel .course-dinner-lead {
+      color: rgb(254 242 242 / 0.95);
+    }
     /* 제철 오마카세 코스 섹션 배경과 동일 (warm-50) */
     .space-service-card.is-active {
       background-color: #faf7f7;
@@ -1252,7 +1304,49 @@
   </section>
 
 
-  <!-- ===================== 3. 시설 & 서비스 (50/50 + 수직 카드) ===================== -->
+  <!-- ===================== 3. 영상 ===================== -->
+  <section
+    id="film"
+    class="relative z-10 bg-surface-base py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
+    aria-labelledby="film-section-title"
+  >
+    <div class="mx-auto max-w-5xl">
+      <div class="mb-10 sm:mb-12" data-reveal>
+        <span
+          class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
+        >
+          <i class="ph-fill ph-play-circle text-sm leading-none text-red-200/70" aria-hidden="true"></i>
+          Film
+        </span>
+        <h2
+          id="film-section-title"
+          class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight"
+        >
+          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">A Moment at the Counter</span>
+          <span>카운터의 한 순간</span>
+        </h2>
+        <p class="mt-5 max-w-2xl text-sm leading-relaxed text-red-100/62 sm:mt-6 sm:text-base">
+          약 20초 안팎의 짧은 영상으로 매장의 분위기와 카운터의 장면을 미리 만나 보세요.
+        </p>
+      </div>
+      <div class="relative overflow-hidden bg-surface-lift" data-reveal data-reveal-delay="1">
+        <video
+          class="aspect-video w-full object-cover"
+          controls
+          playsinline
+          preload="metadata"
+          poster="dinner_bg.png"
+          aria-label="스시 카이덴 매장 분위기 소개 영상"
+        >
+          <source src="kaiden-intro.mp4" type="video/mp4" />
+          이 브라우저는 HTML5 동영상을 지원하지 않습니다.
+        </video>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== 4. 시설 & 서비스 (50/50 + 수직 카드) ===================== -->
   <section id="space" class="relative z-10 overflow-x-hidden bg-white py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
     <div class="mx-auto max-w-5xl">
       <div
@@ -1515,7 +1609,7 @@
   </section>
 
 
-  <!-- ===================== 4. 예약 안내 ===================== -->
+  <!-- ===================== 5. 예약 안내 ===================== -->
   <!-- 온라인 예약: Supabase reservation_requests 테이블에 저장 (supabase-setup.sql 참고). -->
   <section id="reserve" class="relative z-10 bg-surface-base py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
     <div class="mx-auto max-w-5xl">
@@ -1717,7 +1811,7 @@
   </section>
 
 
-  <!-- ===================== 5. 찾아오시는 길 ===================== -->
+  <!-- ===================== 6. 찾아오시는 길 ===================== -->
   <section id="location" class="relative z-10 bg-surface-lift py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
     <div class="mx-auto max-w-5xl">
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-12">
@@ -1769,48 +1863,6 @@
             decoding="async"
           />
         </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ===================== 6. 영상 (푸터 위) ===================== -->
-  <section
-    id="film"
-    class="relative z-10 bg-surface-base py-20 px-6 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
-    aria-labelledby="film-section-title"
-  >
-    <div class="mx-auto max-w-5xl">
-      <div class="mb-10 sm:mb-12" data-reveal>
-        <span
-          class="inline-flex items-center gap-2 border-b border-red-200/25 pb-2 text-xs font-semibold uppercase tracking-wide text-red-200/75"
-        >
-          <i class="ph-fill ph-play-circle text-sm leading-none text-red-200/70" aria-hidden="true"></i>
-          Film
-        </span>
-        <h2
-          id="film-section-title"
-          class="mt-6 flex flex-col gap-1.5 text-2xl font-medium leading-tight text-red-50 sm:mt-7 sm:gap-2 sm:text-3xl sm:leading-tight"
-        >
-          <span class="font-moondance text-[1.35rem] font-normal leading-none text-red-200/85 sm:text-[1.65rem]">A Moment at the Counter</span>
-          <span>카운터의 한 순간</span>
-        </h2>
-        <p class="mt-5 max-w-2xl text-sm leading-relaxed text-red-100/62 sm:mt-6 sm:text-base">
-          약 20초 안팎의 짧은 영상으로 매장의 분위기와 카운터의 장면을 미리 만나 보세요.
-        </p>
-      </div>
-      <div class="relative overflow-hidden bg-surface-lift" data-reveal data-reveal-delay="1">
-        <video
-          class="aspect-video w-full object-cover"
-          controls
-          playsinline
-          preload="metadata"
-          poster="dinner_bg.png"
-          aria-label="스시 카이덴 매장 분위기 소개 영상"
-        >
-          <source src="kaiden-intro.mp4" type="video/mp4" />
-          이 브라우저는 HTML5 동영상을 지원하지 않습니다.
-        </video>
       </div>
     </div>
   </section>
@@ -1902,7 +1954,7 @@
                 <span class="font-moondance text-base font-normal text-red-200/85 sm:text-lg">Dinner Omakase</span>
                 디너 오마카세
               </h3>
-              <p class="mt-3 text-sm leading-relaxed text-red-100/88 sm:text-base">
+              <p class="course-dinner-lead mt-3 text-sm leading-relaxed sm:text-base">
                 카운터 중심의 풀 코스. 니기리·사시미 외 소테·구이·국물·디저트까지 셰프가 한 흐름으로 구성합니다.
               </p>
             </div>
@@ -1911,13 +1963,17 @@
               <span class="text-2xl font-medium text-red-50 sm:text-3xl">₩ 180,000</span>
             </div>
           </div>
-          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-red-200/80">구성 요약</p>
-          <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-50/95 sm:text-base">
-            <li>· 시즌 전채 1~2품</li>
-            <li>· 제철 사시미 · 니기리 중심 다도</li>
-            <li>· 소테 또는 구이 요리 · 국물</li>
-            <li>· 디저트 · 약 90분 · 사케 페어링 선택 가능</li>
-          </ul>
+          <div
+            class="mx-auto mt-6 w-[97%] max-w-full border-t border-red-50/20 bg-black/20 px-5 py-5 sm:mt-7 sm:px-6 sm:py-6"
+          >
+            <p class="text-xs font-semibold uppercase tracking-wide text-red-200/80">구성 요약</p>
+            <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-50/95 sm:text-base">
+              <li>· 시즌 전채 1~2품</li>
+              <li>· 제철 사시미 · 니기리 중심 다도</li>
+              <li>· 소테 또는 구이 요리 · 국물</li>
+              <li>· 디저트 · 약 90분 · 사케 페어링 선택 가능</li>
+            </ul>
+          </div>
         </section>
 
         <section
@@ -1942,13 +1998,17 @@
               <span class="text-2xl font-medium text-red-950 sm:text-3xl">₩ 120,000</span>
             </div>
           </div>
-          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-red-800/80">구성 요약</p>
-          <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-950 sm:text-base">
-            <li>· 가벼운 전채 · 제철 사시미</li>
-            <li>· 니기리 중심 약 8품</li>
-            <li>· 말차 또는 시즌 디저트 · 약 60분</li>
-            <li>· 평일 런치 한정 · 예약 필수</li>
-          </ul>
+          <div
+            class="mx-auto mt-6 w-[97%] max-w-full border-t border-red-950/10 bg-warm-100 px-5 py-5 sm:mt-7 sm:px-6 sm:py-6"
+          >
+            <p class="text-xs font-semibold uppercase tracking-wide text-red-800/80">구성 요약</p>
+            <ul class="mt-3 space-y-2 text-sm leading-relaxed text-red-950 sm:text-base">
+              <li>· 가벼운 전채 · 제철 사시미</li>
+              <li>· 니기리 중심 약 8품</li>
+              <li>· 말차 또는 시즌 디저트 · 약 60분</li>
+              <li>· 평일 런치 한정 · 예약 필수</li>
+            </ul>
+          </div>
         </section>
       </div>
 
